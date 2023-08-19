@@ -1,0 +1,30 @@
+<h1>Real Time Products</h1>
+<ul>
+    {{#each productos}}
+        <li>{{this.title}} - {{this.descripcion}}. Precio: ${{this.price}}</li>
+    {{/each}}
+</ul>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io(); // Inicializa la conexión con el servidor de Socket.IO
+
+    socket.on('connect', () => {
+    console.log('Conectado al servidor de Socket.IO');
+    });
+
+    socket.on('productAdded', (nuevoProducto) => {
+    // Actualiza la lista de productos en el cliente con el nuevo producto
+    const productList = document.getElementById('product-list');
+    
+    const newProductItem = document.createElement('li');
+    newProductItem.textContent = nuevoProducto.nombre; // Cambia 'nombre' al atributo correcto del producto
+
+    productList.appendChild(newProductItem);
+    });
+
+    socket.on('disconnect', () => {
+    console.log('Desconectado del servidor de Socket.IO');
+    });
+</script>

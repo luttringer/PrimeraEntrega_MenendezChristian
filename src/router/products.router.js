@@ -48,6 +48,8 @@ router.post("/", async (req, res) =>
         const productoAgregado = await managers.addProduct(nuevoProducto);
         console.log(productoAgregado);
 
+        io.emit('productAdded', productoAgregado);
+
         res.status(201).json({ status: "success", message: "Producto agregado satisfactoriamente", product: productoAgregado });
     } catch (error) {
         res.status(500).json({ error: "Error al agregar el producto" });
