@@ -31,16 +31,5 @@
 		"status": true,
 		"stock": 4,
 		"category": "yerba"
-	},
-	{
-		"title": "13",
-		"descripcion": "Yerba mate Canarias, tradición y calidad",
-		"price": 194,
-		"thumbnail": "https://prod-resize.tiendainglesa.com.uy/images/large/P000691-1.jpg?20170830115411,Yerba-CANARIAS-1-Kg-en-Tienda-Inglesa",
-		"code": 333333333333333300,
-		"status": true,
-		"stock": 3,
-		"category": "yerba",
-		"id": 4
 	}
 ]

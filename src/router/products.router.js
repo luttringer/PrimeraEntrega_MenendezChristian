@@ -40,21 +40,24 @@ router.get("/:pid", async (req,res)=>
     }
 })
 
-router.post("/", async (req, res) => 
-{ 
-    const nuevoProducto = req.body;
-    
+router.post("/", async (req, res) => {
     try {
-        const productoAgregado = await managers.addProduct(nuevoProducto);
-        console.log(productoAgregado);
+      const product = await managers.addProduct(req.body);
+      if (product === "The insert code already exists") {
+        res.status(400).json({ message: "Error al crear el producto", product });
+      } else if (product === "Complete all fields") {
+        res.status(400).json({ message: "Error al crear el producto", product });
+      } else {
 
-        io.emit('productAdded', productoAgregado);
-
-        res.status(201).json({ status: "success", message: "Producto agregado satisfactoriamente", product: productoAgregado });
+        const port = process.env.PORT || 8080;
+        const redirectURL = `${req.protocol}://${req.hostname}:${port}/realtimeproducts`;
+        res.redirect(redirectURL);
+      }
     } catch (error) {
-        res.status(500).json({ error: "Error al agregar el producto" });
+      throw new error("Error al crear el producto", error);
     }
-});
+  });
+
 
 router.put("/:pid", async (req, res) => 
 {
@@ -78,6 +81,10 @@ router.delete("/:pid", async (req, res) =>
         const productoEliminado = await managers.deleteProduct(producto_id);
 
         res.status(201).json({ status: "success", message: "Producto eliminado satisfactoriamente", product: productoEliminado });
+
+        const port = process.env.PORT || 8080;
+        const redirectURL = `${req.protocol}://${req.hostname}:${port}/realtimeproducts`;
+        res.redirect(redirectURL);
     } catch (error) {
         res.status(500).json({ error: "Error al eliminar el producto" });
     }

@@ -8,7 +8,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 
 import ProductManager from "./manager/ProductManager.js";
-const managers = new ProductManager('products.json');
+const p_manager = new ProductManager('products.json');
 
 const PORT = 8080;
 const app = express();
@@ -21,7 +21,7 @@ app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/views`);
 
 // instancia de Socket.IO vinculada al servidor HTTP
-const io = new Server(server); // Utiliza la clase Server
+const socketServer = new Server(server); // Utiliza la clase Server
 
 //Middlewares a utilizar
 app.use(express.json());
@@ -31,22 +31,33 @@ app.use(express.static((`${__dirname}/views`)));
 //Rutas
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartsRouter);
-app.use('/views', viewsRouter);
+app.use('/', viewsRouter);
 
 app.listen(PORT, () => 
 {
   console.log(`Servidor Express escuchando en el puerto ${PORT}`);
 });
 
-// conexiones de Socket.IO
-io.on('connection', async (socket) => 
+socketServer.on("connection", async (socket) => 
 {
-  console.log('Usuario conectado:', socket.id);
+  console.log("Cliente conectado con id: ", socket.id);
 
-  const productos = await managers.getProducts();
-  socket.emit('productAdded', productos);
+  const listProducts = await p_manager.getProducts({});
+  socketServer.emit("sendProducts", listProducts);
 
-  socket.on('disconnect', () => {
-    console.log('Usuario desconectado:', socket.id);
+  socket.on("addProduct", async (obj) => {
+    await p_manager.addProduct(obj);
+    const listProducts = await p_manager.getProducts({});
+    socketServer.emit("sendProducts", listProducts);
+  });
+
+  socket.on("deleteProduct", async (id) => {
+    await p_manager.deleteProduct(id);
+    const listProducts = await p_manager.getProducts({});
+    socketServer.emit("sendProducts", listProducts);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Cliente desconectado");
   });
 });

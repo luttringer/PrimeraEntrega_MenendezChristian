@@ -7,7 +7,7 @@ const managers = new ProductManager('products.json');
 const router = express.Router();
 const hbs = exphbs.create();
 
-router.get('/home', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const productos = await managers.getProducts();
 
