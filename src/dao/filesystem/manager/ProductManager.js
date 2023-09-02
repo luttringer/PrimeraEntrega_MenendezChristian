@@ -1,5 +1,5 @@
 import fs from 'fs';
-import __dirname from '../utils.js';
+import __dirname from '../../../utils.js';
 import path from 'path';
 
 export default class ProductManager 
