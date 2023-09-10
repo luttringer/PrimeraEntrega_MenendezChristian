@@ -1,7 +1,29 @@
-<h1>products list</h1>
+<h1>Products List</h1>
 
-{{#each products}}
+{{#if category}}
+    <p>Category: {{category}}</p>
+{{/if}}
+
+{{#if status}}
+    <p>Status: {{status}}</p>
+{{/if}}
+
+{{#each filterProducts}}
     <p>{{this.title}}</p>
     <p>{{this.price}}</p>
-    <img src={{this.thumbnail.[0]}}>
+    {{#with this.thumbnail}}
+        <img src="{{this.[0]}}">
+    {{/with}}
+    <br>
+    <button>Agregar al Carrito</button> 
 {{/each}}
+
+{{#if hasPrevPage}}
+    <a href="/products?page={{prevPage}}">Anterior</a>
+{{/if}}
+
+<h5>{{page}}</h5>
+
+{{#if hasNextPage}}
+    <a href="/products?page={{nextPage}}">Siguiente</a>
+{{/if}}
