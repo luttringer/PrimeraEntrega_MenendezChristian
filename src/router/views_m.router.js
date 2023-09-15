@@ -22,6 +22,7 @@ router.get('/products', async (req, res) => {
     const products = await productsService.getViewsProducts(limit, page, queryObject, sort);
 
     res.render('Products', {
+        user:req.session.user,
         filterProducts: products.filterProducts,
         page: products.page,
         hasPrevPage: products.hasPrevPage,
@@ -32,7 +33,6 @@ router.get('/products', async (req, res) => {
     });
 });
 
-
 router.get('/carts/:cid', async (req, res) => {
     const carrito_id = req.params.cid;
     const filter = { _id: carrito_id }; // Crea un objeto de filtro con el campo "_id" y el valor del ID
@@ -42,5 +42,23 @@ router.get('/carts/:cid', async (req, res) => {
         cart
     });
 });
+
+/*rutas para el sistema de login*/ 
+router.get('/', async(req,res)=>{
+    if(!req.session.user)
+    {
+        return res.redirect('/login');
+    }
+    res.render('profile', {user: req.session.user});
+})
+
+router.get('/register', async(req,res)=>{
+    res.render('register')
+})
+
+router.get('/login', async(req,res)=>{
+    res.render('login')
+})
+
 
 export default router;
