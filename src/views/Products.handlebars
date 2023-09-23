@@ -1,5 +1,5 @@
 <h1>Products List</h1>
-<h2>bienvenido {{this.user.firstName}}.</h2>
+<h2 id="bienvenida"></h2>
 <a href="/api/sessions/logout"><button>logout</button></a>
 <br>
 
@@ -30,3 +30,24 @@
 {{#if hasNextPage}}
     <a href="/products?page={{nextPage}}">Siguiente</a>
 {{/if}}
+
+
+
+<script>
+    const token = localStorage.getItem('accessToken');
+    if(!token) window.location.replace('/login');
+
+    fetch('/api/sessions/profileInfo', 
+    {
+        method:'GET',
+        headers:
+        {
+            authorization: `Bearer ${token}`
+        }
+    }).then(response=>response.json())
+    .then(result=>
+    {
+        const user =result.payload;
+        document.querySelector("#bienvenida").innerHTML = `bienvenido ${user.name}`;
+    })
+</script>
