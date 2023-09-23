@@ -10,6 +10,8 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 //import FileStore from 'session-file-store';
 import MongoStore from 'connect-mongo';
+import passport from 'passport';
+import initializeStrategies from './config/passport.config.js';
 
 
 
@@ -42,6 +44,9 @@ app.use(session({
     resave: false,                   //reescribir session 
     saveUninitialized: true         //session solo donde se inicialice y utilicen
 }))
+//configuracion de passport, ejecucion
+initializeStrategies();
+app.use(passport.initialize());
 
 //routes
 app.use('/', views_mRouter);
