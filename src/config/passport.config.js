@@ -3,6 +3,8 @@ import local from 'passport-local';
 import GithubStrategy from 'passport-github2';
 import UserManager from "../dao/mongo/managers/userManager.js";
 import auth from "../services/auth.js";
+import {Strategy,ExtractJwt} from 'passport-jwt';
+import { cookieExtractor } from "../utils.js";
 
 
 
@@ -11,7 +13,7 @@ const usersServices = new UserManager();
 
 const initializeStrategies = ()=> 
 {
-    passport.use('register', new LocalStrategy({passReqToCallback:true, usernameField:'email'}, async (req,email,password,done)=>
+    passport.use('register', new LocalStrategy({passReqToCallback:true, usernameField:'email',session:false}, async (req,email,password,done)=>
     {
         //register logic
         const {firstName, lastName, age} = req.body;
@@ -23,7 +25,7 @@ const initializeStrategies = ()=>
         done(null,result);
     }));
 
-    passport.use('login', new LocalStrategy({usernameField:'email'}, async (email,password,done)=>
+    passport.use('login', new LocalStrategy({usernameField:'email',session:false}, async (email,password,done)=>
     {
         //login logic
         if(!email || !password) return done(null,false, {message: "incomplete values"})
@@ -60,6 +62,15 @@ const initializeStrategies = ()=>
         {
             done(null,user);
         }
+    }))
+
+    passport.use('jwt', new Strategy(
+    {
+        jwtFromRequest:ExtractJwt.fromExtractors([cookieExtractor]),
+        secretOrKey:'buhoS3cr3t'
+    }, async(payload,done)=>
+    {
+        return done(null,payload);
     }))
 }
 
