@@ -8,7 +8,8 @@ const router = Router();
 const cartsService = new CartsManager(); 
 const productsService = new ProductManager();   
 
-router.get('/products', async (req, res) => {
+router.get('/products',passportCall('jwt'), async (req, res) => {
+    const user = req.user;
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 3;
     const sort = req.query.sort || 'asc';
@@ -23,7 +24,7 @@ router.get('/products', async (req, res) => {
     const products = await productsService.getViewsProducts(limit, page, queryObject, sort);
 
     res.render('Products', {
-        user:req.session.user,
+        user:user,
         filterProducts: products.filterProducts,
         page: products.page,
         hasPrevPage: products.hasPrevPage,
