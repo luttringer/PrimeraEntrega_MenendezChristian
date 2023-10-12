@@ -69,6 +69,13 @@ body
     cursor: pointer;
 }
 
+.submitBtn:hover 
+{
+    transition: background-color ease-in 1s, color ease 1s;
+    background-color: var(--color-black-one);
+    color: var(--color-yellow-one);
+}
+
 .form_login>h1, .form_login>p
 {
     color: var(--color-crema-one);
