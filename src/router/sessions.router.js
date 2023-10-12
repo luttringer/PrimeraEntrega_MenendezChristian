@@ -12,10 +12,15 @@ const router = Router();
 
 router.post('/register', async(req,res)=>
 {
-    res.status(200).send({status:"success", payload:req.user._id});
-})
+    try {
+        const newUser = await usersServices.create(req.body);
 
-//passportCall('jwt')
+        res.status(200).send({ status: "success", payload: newUser._id });
+    } catch (error) {
+        res.status(500).send({ status: "error", error: "Internal server error" });
+    }
+
+})
 
 router.post('/login', async(req,res)=>
 {
