@@ -12,19 +12,20 @@ const router = Router();
 
 router.post('/register', async(req,res)=>
 {
-    try {
-        const newUser = await usersServices.create(req.body);
-
-        res.status(200).send({ status: "success", payload: newUser._id });
-    } catch (error) {
-        res.status(500).send({ status: "error", error: "Internal server error" });
-    }
-
+    //utilizo mi passport strategy para register.
+    passport.authenticate('register', (error, result, info) => 
+    {
+        if (error) return res.status(500).send({ status: "error", error: "Internal server error" });
+        if (!result) return res.status(400).send({ status: "error", error: info.message ? info.message : info.toString() });
+        res.status(200).send({ status: "success", payload: result._id });
+    })(req, res);
 })
 
 router.post('/login', async(req,res)=>
 {
     const {email,password} = req.body;
+
+    console.log(`email:${email}, passoword:${password}`);
 
     if(!email || !password) return res.status(400).send({status:'error', error:'Incomplete values'})
     const user = await usersServices.getBy({email});
