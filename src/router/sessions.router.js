@@ -32,26 +32,32 @@ router.post('/login', async(req,res)=>
     res.cookie('authCookie',token,{httpOnly:true}).send({status:'success', token});
 });
 
+router.get('/current', passportCall('jwt'),authorization('admin'),(req,res)=>
+{
+    const user = req.user;
+    res.send({status:"success", payload:user});
+})
+
 router.get('/profileInfo',validateJWT, async(req,res)=>
 {
     console.log(req.user);
     res.send({status:'success', payload:req.user})
 })
 
+router.get('/logout', async(req,res)=>
+{
+    //elimino jwt token y redirecciono.
+    res.clearCookie('authCookie'); 
+    res.redirect('/');
+})
 
-//autenticacion de terceros 
 
+//autenticacion de terceros con passport
 router.get('/github', passport.authenticate('github'),(req,res)=>{})
 router.get('/githubcallback',passport.authenticate('github'),(req,res)=>
 {
     req.session.user = req.user;
     res.redirect('/');
-})
-
-router.get('/current', passportCall('jwt'),authorization('admin'),(req,res)=>
-{
-    const user = req.user;
-    res.send({status:"success", payload:user});
 })
 
 router.get('/authFail', (req,res)=>
@@ -60,13 +66,5 @@ router.get('/authFail', (req,res)=>
     res.status(401).send({status:"error", error:"Error de autenticación"});
 })
 
-router.get('/logout', async(req,res)=>
-{
-    req.session.destroy(error=>
-    {
-        if(error) console.log(error); 
-        return res.redirect('/');
-    });
-})
 
 export default router;

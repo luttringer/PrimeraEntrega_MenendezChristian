@@ -36,6 +36,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static((`${__dirname}/public`)));
 app.use(cookieParser("LECHUZA"));
+
+/*
 app.use(session({
     store: MongoStore.create({
         mongoUrl: "mongodb+srv://luttringerezequiel:123@cluster0.obvrjnw.mongodb.net/ecommerce?retryWrites=true&w=majority",
@@ -45,6 +47,7 @@ app.use(session({
     resave: false,                   //reescribir session 
     saveUninitialized: true         //session solo donde se inicialice y utilicen
 }))
+*/
 
 //configuracion de passport, ejecucion
 initializeStrategies();
