@@ -12,6 +12,7 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import initializeStrategies from './config/passport.config.js';
+import dictionaryRouter from './router/dictionary.router.js';
 
 
 
@@ -54,6 +55,7 @@ app.use('/', views_mRouter);
 app.use('/api/products', product_mRouter);
 app.use('/api/carts', cart_mRouter);
 app.use('/api/sessions', sessionRouter);
+app.use('/api/dictionary', dictionaryRouter);
 
 /*trabajo de cookies*/ 
 /*

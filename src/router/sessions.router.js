@@ -10,21 +10,15 @@ import authorization from "../middlewares/authorization.js";
 const usersServices = new UserManager();
 const router = Router();
 
-router.post('/register',passportCall('jwt'), async(req,res)=>
+router.post('/register', async(req,res)=>
 {
     res.status(200).send({status:"success", payload:req.user._id});
 })
 
-/*
-router.post('/login',passportCall('jwt'), async(req,res)=>
-{
-    req.session.user = req.user;
-    res.status(200).send({status:"success", message:"logeado"});
-});*/ 
+//passportCall('jwt')
 
-router.post('/loginJWT',passportCall('jwt'), async(req,res)=>
+router.post('/login', async(req,res)=>
 {
-    //login logic
     const {email,password} = req.body;
 
     if(!email || !password) return res.status(400).send({status:'error', error:'Incomplete values'})
@@ -33,12 +27,10 @@ router.post('/loginJWT',passportCall('jwt'), async(req,res)=>
     const isValidPassword = await auth.validatePassword(password, user.password);
     if(!isValidPassword) return res.status(400).send({status:'error', error:'Incorrect credentials'})
     
-    //token JWT
+    //creacion token  JWT Y carga en cookie
     const token = jwt.sign({id:user._id, email:user.email, role:user.role, name:user.firstName}, 'buhoS3cr3t', {expiresIn:'1d'});
-    //cookie y success status
     res.cookie('authCookie',token,{httpOnly:true}).send({status:'success', token});
-
-})
+});
 
 router.get('/profileInfo',validateJWT, async(req,res)=>
 {
