@@ -21,21 +21,16 @@ router.post('/register', async(req,res)=>
     })(req, res);
 })
 
-router.post('/login', async(req,res)=>
-{
-    const {email,password} = req.body;
+router.post('/login', (req, res) => {
+    passport.authenticate('login', (error, user, info) => 
+    {
+        if (error) return res.status(500).send({ status: "error", error: "Internal server error" });
+        if (!user) return res.status(400).send({ status: "error", error: info.message ? info.message : info.toString() });
 
-    console.log(`email:${email}, passoword:${password}`);
-
-    if(!email || !password) return res.status(400).send({status:'error', error:'Incomplete values'})
-    const user = await usersServices.getBy({email});
-    if(!user) return res.status(400).send({status:'error', error:'Incorrect credentials'})
-    const isValidPassword = await auth.validatePassword(password, user.password);
-    if(!isValidPassword) return res.status(400).send({status:'error', error:'Incorrect credentials'})
-    
-    //creacion token  JWT Y carga en cookie
-    const token = jwt.sign({id:user._id, email:user.email, role:user.role, name:user.firstName}, 'buhoS3cr3t', {expiresIn:'1d'});
-    res.cookie('authCookie',token,{httpOnly:true}).send({status:'success', token});
+        //configuracion de token JWT y cookie asociada
+        const token = jwt.sign({ id: user._id, email: user.email, role: user.role, name: user.firstName }, 'buhoS3cr3t', { expiresIn: '1d' });
+        res.cookie('authCookie', token, { httpOnly: true }).send({ status: 'success', token });
+    })(req, res);
 });
 
 router.get('/current', passportCall('jwt'),authorization('admin'),(req,res)=>
