@@ -1,6 +1,7 @@
 import { Router } from "express";
 import ProductManager from "../dao/mongo/managers/productsManager.js";
 import CartsManager from "../dao/mongo/managers/cartsManager.js";
+import passportCall from "../middlewares/passportCall.js";
 
 
 const router = Router();
@@ -43,14 +44,16 @@ router.get('/carts/:cid', async (req, res) => {
     });
 });
 
-/*rutas para el sistema de login*/ 
-router.get('/', async(req,res)=>{
-    if(!req.session.user)
-    {
+router.get('/', passportCall('jwt'), (req, res) => 
+{
+    const user = req.user; 
+
+    if (!req.cookies.authCookie || !req.user) {
         return res.redirect('/login');
     }
-    res.render('profile', {user: req.session.user});
-})
+    
+    res.render('profile', { user });          
+});
 
 router.get('/register', async(req,res)=>{
     res.render('register')

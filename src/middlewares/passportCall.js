@@ -9,7 +9,8 @@ const passportCall = (strategy)=>
             if(error) return next(error);
             if(!user)
             {
-                return res.status(401).send({status:"error",error:info.message?info.message:info.toString()})
+                //si no hay usuario que levantar prefiero controlarlo desde el endpoint
+                //return res.status(401).send({status:"error",error:info.message?info.message:info.toString()})
             }
 
             req.user = user;
