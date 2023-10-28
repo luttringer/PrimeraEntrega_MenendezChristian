@@ -13,6 +13,7 @@ import MongoStore from 'connect-mongo';
 import passport from 'passport';
 import initializeStrategies from './config/passport.config.js';
 import dictionaryRouter from './router/dictionary.router.js';
+import cors from 'cors';
 
 const app = express();
 //const FileStorage = FileStore(session);      
@@ -29,11 +30,13 @@ app.engine('handlebars', hbs.engine); // Usa hbs.engine en lugar de handlebars.e
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/views`);
 
-//middlewars
+//middlewars'
+app.use(cors({origin:['http://localhost:8080']}));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static((`${__dirname}/public`)));
 app.use(cookieParser("LECHUZA"));
+
 
 /*
 app.use(session({
