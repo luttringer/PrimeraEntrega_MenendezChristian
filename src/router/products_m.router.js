@@ -2,6 +2,8 @@ import { Router } from "express";
 import ProductManager from "../dao/mongo/managers/productsManager.js";
 import uploader from "../services/uploadServices.js";
 
+import productsController from "../controllers/products.controller.js";
+
 const router = Router();
 const productsService = new ProductManager();                                   //instancio objeto de clase del manager de videogames
 
@@ -28,26 +30,7 @@ router.get('/', async(req, res)=>{                                              
     res.send({status:"success", payload:products});                              //devuelvo todos los videojuegos
 });
 
-router.post('/', uploader.array('thumbnail'),async(req,res)=>                      //cargo un middlewar intermedio que invoque a mi uploader para trabajar con el archivo que me enviaran
-{       
-    const { title, description, category, code, status, price, stock} = req.body;
-    if(!title || !description || !category || !code || !status || !price || !stock) return res.status(400).send({status:"error",error:"producto incompleto"});
-    const newProduct = 
-    {
-        title,
-        description,
-        category,
-        code,
-        status,
-        price,
-        stock
-    }
-    const thumbnail = req.files.map(file=>`${req.protocol}://${req.hostname}:${process.env.PORT||8080}/img/${file.filename}`)
-    newProduct.thumbnail = thumbnail;
-
-    const result = await productsService.addProduct(newProduct);
-    res.send({status:"success", payload:result._id});
-});
+router.post('/', uploader.array('thumbnail'), productsController.addProduct);
 
 router.put('/:pid', async(req, res)=>{   
     const {pid} = req.params;

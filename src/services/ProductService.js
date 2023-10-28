@@ -9,4 +9,9 @@ export default class ProductService
     {
         return this.manager.getViewsProducts(limit, page, queryObject, sort);
     }
+
+    addProduct = (newProduct)=>
+    {
+        return this.manager.addProduct(newProduct);
+    }
 }
