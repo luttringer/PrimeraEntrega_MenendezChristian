@@ -1,9 +1,5 @@
-//import ProductManager from "../dao/mongo/managers/productsManager.js";
 import { productService } from "../services/index.js";
-import CartsManager from "../dao/mongo/managers/cartsManager.js";
-
-//const productsService = new ProductManager();   
-const cartsService = new CartsManager(); 
+import { cartService } from "../services/index.js";
 
 const getViewsProducts = async (req, res) => 
 {
@@ -45,7 +41,7 @@ const getCartsById = async (req, res) =>
 {
     const carrito_id = req.params.cid;
     const filter = { _id: carrito_id };
-    const cart = await cartsService.getCartWithDetails(filter);
+    const cart = await cartService.getCartWithDetails(filter);
 
     //creo un cart con las propiedades por defecto cambiadas ya que hbs no le gusta manejarlas directamente
     let productos = [];
