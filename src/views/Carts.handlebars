@@ -1,13 +1,17 @@
 <h1>carts list</h1>
 
-{{#if cart}}
-    <p> id carrito: {{cart._id}}</p>
+{{#if cart_filtrado}}
+    <p> id carrito: {{cart_filtrado.id}}</p>
     <br>
-    {{#each cart.products}}
-        <br>
-        <p> id producto: {{this.id_product}}</p>
-        <p> quantity producto: {{this.quantity}}</p>
-    {{/each}}
+    {{#if this.productos.length}}
+        {{#each this.productos}}
+            <br>
+            <p> id producto: {{this.id_product._id}}</p>
+            <p> quantity producto: {{this.quantity}}</p>
+        {{/each}}
+    {{else}}
+        <p>No hay productos en el carrito.</p>
+    {{/if}}
 {{else}}
     <p>No se encontró ningún carrito.</p>
 {{/if}}

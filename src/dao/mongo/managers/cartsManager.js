@@ -58,8 +58,7 @@ export default class CartsManager {
             });
 
             if (!cart) throw new Error(`No se encontró el carrito con ID ${cartId}`);
-            
-
+        
             return cart;
         } catch (error) 
         {

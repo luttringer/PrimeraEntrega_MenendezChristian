@@ -43,12 +43,20 @@ const getViewsProducts = async (req, res) =>
 const getCartsById = async (req, res) => 
 {
     const carrito_id = req.params.cid;
-    const filter = { _id: carrito_id }; // Crea un objeto de filtro con el campo "_id" y el valor del ID
-    const cart = await cartsService.getCartsBy(filter);
+    const filter = { _id: carrito_id };
+    const cart = await cartsService.getCartWithDetails(filter);
 
-    res.render('Carts', {
-        cart
-    });
+    //creo un cart con las propiedades por defecto cambiadas ya que hbs no le gusta manejarlas directamente
+    let productos = [];
+    if (cart) productos = cart.products;
+    
+    const cart_filtrado = 
+    {
+        id: cart ? cart._id : null, 
+        productos,
+    };
+
+    res.render('Carts', { cart_filtrado });
 };
 
 export default 
