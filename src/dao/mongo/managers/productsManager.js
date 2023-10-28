@@ -66,7 +66,7 @@ export default class ProductManager
         } catch (error) {
           throw error;
         }
-      };
+    };
 
       
     getProductsBy = (params)=>

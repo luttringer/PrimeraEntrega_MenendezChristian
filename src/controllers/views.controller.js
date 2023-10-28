@@ -1,7 +1,8 @@
-import ProductManager from "../dao/mongo/managers/productsManager.js";
+//import ProductManager from "../dao/mongo/managers/productsManager.js";
+import { productService } from "../services/index.js";
 import CartsManager from "../dao/mongo/managers/cartsManager.js";
 
-const productsService = new ProductManager();   
+//const productsService = new ProductManager();   
 const cartsService = new CartsManager(); 
 
 const getViewsProducts = async (req, res) => 
@@ -19,7 +20,7 @@ const getViewsProducts = async (req, res) =>
     if (status) queryObject.status = status; 
 
     try {
-        const products = await productsService.getViewsProducts(limit, page, queryObject, sort);
+        const products = await productService.getViewsProducts(limit, page, queryObject, sort);
 
         res.render('Products', 
         {
