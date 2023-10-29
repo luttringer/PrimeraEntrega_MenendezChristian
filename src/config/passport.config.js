@@ -3,9 +3,9 @@ import local from 'passport-local';
 import GithubStrategy from 'passport-github2';
 import UserManager from "../dao/mongo/managers/userManager.js";
 import auth from "../services/auth.js";
-import {Strategy,ExtractJwt} from 'passport-jwt';
+import { Strategy,ExtractJwt } from 'passport-jwt';
 import { cookieExtractor } from "../utils.js";
-
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 
 
 const LocalStrategy = local.Strategy; //local = user + pass
@@ -62,6 +62,18 @@ const initializeStrategies = ()=>
         {
             done(null,user);
         }
+    }))
+
+    passport.use('google', new GoogleStrategy(
+    {
+        clientID:"682700092334-ls46chnjrekrkvp7lr6907m5posodi02.apps.googleusercontent.com",
+        clientSecret:"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",
+        callbackURL:"http://localhost:8080/api/sessions/googlecallback"
+
+    }, async(accessToken, refreshToken,profile,done)=>
+    {
+        console.log(profile);
+        done(null,false);
     }))
 
     passport.use('jwt', new Strategy(

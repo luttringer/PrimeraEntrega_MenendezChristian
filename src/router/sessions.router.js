@@ -33,7 +33,7 @@ router.post('/login', (req, res) => {
     })(req, res);
 });
 
-router.get('/current', passportCall('jwt'),authorization('admin'),(req,res)=>
+router.get('/current', passportCall({ strategyType: 'jwt' }),authorization('admin'),(req,res)=>
 {
     const user = req.user;
     res.send({status:"success", payload:user});
@@ -54,12 +54,21 @@ router.get('/logout', async(req,res)=>
 
 
 //autenticacion de terceros con passport
-router.get('/github', passport.authenticate('github'),(req,res)=>{})
-router.get('/githubcallback',passport.authenticate('github'),(req,res)=>
+//github
+router.get('/github', passportCall('github'),(req,res)=>{})
+router.get('/githubcallback',validateJWT, passportCall('github'),(req,res)=>
 {
-    req.session.user = req.user;
+    const user = req.user;
     res.redirect('/');
 })
+
+//google
+router.get('/google', passportCall('google', { scope: ['profile', 'email'], strategyType: 'OAUTH' }));
+router.get('/googlecallback', validateJWT, passportCall('google', { strategyType: 'OAUTH' }), (req, res) => 
+{
+    const user = req.user;
+    res.redirect('/');
+});
 
 router.get('/authFail', (req,res)=>
 {
