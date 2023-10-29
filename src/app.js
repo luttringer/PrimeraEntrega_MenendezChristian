@@ -19,8 +19,7 @@ import initializeStrategies from './config/passport.config.js';
 import dictionaryRouter from './router/dictionary.router.js';
 import cors from 'cors';
 
-//variables de entorno
-
+//variables de entorno del .env
 const DB_URL = process.env.DB_URL;
 const ENVPORT = process.env.PORT;
 const COOKIEPARSER =  process.env.COOKIEPARSER;

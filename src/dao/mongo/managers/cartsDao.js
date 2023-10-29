@@ -1,6 +1,6 @@
 import cartsModel from "../models/carts.js";
 
-export default class CartsManager {
+export default class CartsDao {
 
     updateProductQuantity = async (cartId, productId, quantity) => 
     {

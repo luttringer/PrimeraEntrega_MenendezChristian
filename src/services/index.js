@@ -1,8 +1,8 @@
 import ProductService from "./ProductService.js";
-import ProductManager from "../dao/mongo/managers/productsManager.js";
-
 import CartService from "./CartService.js";
-import CartsManager from "../dao/mongo/managers/cartsManager.js";
+import PersistenceFactory from "../dao/PersistenceFactory.js";
 
-export const productService = new ProductService(new ProductManager());
-export const cartService = new CartService(new CartsManager());
+const { productsDao, cartsDao } = await PersistenceFactory.getPersistence();
+
+export const productService = new ProductService(new productsDao());
+export const cartService = new CartService(new cartsDao());

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import CartsManager from "../dao/mongo/managers/cartsManager.js";
+import CartsManager from "../dao/mongo/managers/cartsDao.js";
 
 const router = Router();
 const cartsService = new CartsManager(); 

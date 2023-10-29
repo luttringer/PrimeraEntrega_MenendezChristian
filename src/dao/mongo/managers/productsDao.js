@@ -1,7 +1,6 @@
 import productsModel from "../models/products.js";          //desarrollo un mmanager para no interactuar directamente con el modelo
 
-
-export default class ProductManager
+export default class ProductDao
 {
     getViewsProducts = async (limit, page, query = {}, sort) => 
     {
