@@ -8,11 +8,8 @@ import authorization from "../middlewares/authorization.js";
 const router = Router();
 const cartsService = new CartsManager(); 
 
-/*router.get("/:cid", async (req, res) => {
-   
-});*/
-
 router.get('/:cid', passportCall('jwt', { session: false }), cartsController.getCart);
+router.post('/', passportCall('jwt', { session: false }), cartsController.createCartByUserId);
 
 router.delete('/:cid/products/:pid', async (req, res) => {
     const carrito_id = req.params.cid;
@@ -62,6 +59,5 @@ router.delete('/:cid', async (req, res) => {
     }
 });
 
-router.post('/', passportCall('jwt', { session: false }), cartsController.createCartByUserId);
 
 export default router;

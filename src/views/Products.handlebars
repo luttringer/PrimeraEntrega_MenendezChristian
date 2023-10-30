@@ -17,16 +17,18 @@
     <div class="products_grid">
         {{#each filterProducts}}
             <div class="product">
-                <p class="titleProd">{{this.title}}</p>
                 {{#with this.thumbnail}}
                     <img src="{{this.[0]}}">
                 {{/with}}
+                <p class="titleProd">{{this.title}}</p>
+                <br>
                 {{#if category}}
                     <p>category: {{category}}</p>
                 {{/if}}
 
                 {{#if status}}
                     <p>disponibilidad: disponible</p>
+                    <p>stock: {{this.stock}}</p>
                 {{else}}
                     <p>disponibilidad: sin stock</p>
                 {{/if}}
