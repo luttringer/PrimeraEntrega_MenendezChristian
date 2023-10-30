@@ -63,34 +63,6 @@ const initializeStrategies = ()=>
         }
     }))
 
-    /*passport.use('google', new GoogleStrategy(
-    {
-        clientID:"682700092334-ls46chnjrekrkvp7lr6907m5posodi02.apps.googleusercontent.com",
-        clientSecret:"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",
-        callbackURL:"http://localhost:8080/api/sessions/googlecallback",
-        passReqToCallback:true
-
-    },async (req,accessToken,refreshToken,profile,done)=>
-    {
-        const { _json } = profile;
-        const user = await usersServices.getBy({email:_json.email});
-
-        if(user)
-        {
-            return done(null,user);
-        }else 
-        {
-            const newUser = 
-            {
-                firstName : _json.given_name,
-                lastName : _json.family_name,
-                email: _json.email
-            }
-            const result  = await usersServices.create(newUser);
-            done(null,result);
-        }
-    }))*/
-
     passport.use('google', new GoogleStrategy(
     {
         clientID:"682700092334-ls46chnjrekrkvp7lr6907m5posodi02.apps.googleusercontent.com",

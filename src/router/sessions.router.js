@@ -34,10 +34,18 @@ router.post('/login', (req, res) => {
     })(req, res);
 });
 
-router.get('/current', passportCall({ strategyType: 'jwt' }),authorization('admin'),(req,res)=>
+router.get('/current', passportCall('jwt'),authorization('user'),(req,res)=>
 {
     const user = req.user;
-    res.send({status:"success", payload:user});
+
+    const userDTO = 
+    {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+    };
+
+    res.send({ status: "success", payload: userDTO });
 })
 
 router.get('/profileInfo',validateJWT, async(req,res)=> 
@@ -62,36 +70,8 @@ router.get('/githubcallback',validateJWT, passportCall('github'),(req,res)=>
     res.redirect('/');
 })
 
-//google
-/*router.get('/google', passportCall('google', { scope: ['profile', 'email'], strategyType: 'OAUTH' }));
-router.get('/googlecallback', validateJWT, passportCall('google', { strategyType: 'OAUTH' }), (req, res) => 
-{
-    const token = jwt.sign({ id: user._id, email: user.email, role: user.role, name: user.firstName }, 'buhoS3cr3t', { expiresIn: '1d' });
-    res.cookie('authCookie', token, { httpOnly: true }).send({ status: 'success', token });
-    
-    res.redirect('/');
-});*/
-
-/*router.get('/google',validateJWT, executePolicies('NO_AUTH'),passportCall('google',{scope:['profile','email'],strategyType:'OAUTH'}),async (req,res)=>{})
-router.get('/googlecallback',validateJWT, executePolicies('NO_AUTH'), passportCall('google',{strategyType:'OAUTH'}),async (req,res)=>
-{
-    const tokenizedUser = 
-    {
-        name: `${req.user.firstName} ${req.user.lastName}`,
-        id:req.user._id,
-        role: req.user.role,
-        library:req.user.library
-     }
-    const token = jwt.sign(tokenizedUser,'buhoS3cr3t',{expiresIn:'1d'});
-
-    res.cookie('authCookie', token, { httpOnly: true }).send({ status: 'success', token });
-    //res.clearCookie('library');
-    //es.sendSuccess('Logged In');
-    res.redirect('/');
- })*/
-
- router.get('/google', passportCall('google', { scope: ['profile', 'email'] }));
- router.get('/googlecallback', passportCall('google', { failureRedirect: '/login' }), (req, res) => {
+router.get('/google', passportCall('google', { scope: ['profile', 'email'] }));
+router.get('/googlecallback', passportCall('google', { failureRedirect: '/login' }), (req, res) => {
     const user = req.user;
     const token = jwt.sign({ id: user._id, email: user.email, role: user.role, name: user.firstName }, 'buhoS3cr3t', { expiresIn: '1d' });
     res.cookie('authCookie', token, { httpOnly: true });
@@ -100,7 +80,6 @@ router.get('/googlecallback',validateJWT, executePolicies('NO_AUTH'), passportCa
 
 router.get('/authFail', (req,res)=>
 {
-    //console.log(req.session.message);
     res.status(401).send({status:"error", error:"Error de autenticación"});
 })
 
