@@ -7,7 +7,7 @@
 
     <p id="userName"></p>
     <p id="userEmail"></p>
-    <a href="/api/sessions/logout"><button class="submitBtn ">logout</button></a>
+    <a onclick="logout_redirect_fn();"><button class="submitBtn ">logout</button></a>
     
 </section>
 
@@ -50,10 +50,13 @@
 </section>
 
 
-
-
-
 <script>
+    const logout_redirect_fn = ()=>
+    {
+        localStorage.removeItem('accessToken');
+        window.location.replace('/api/sessions/logout');
+    }
+
     const menu_profile = document.querySelector('#profile_hid');
     menu_profile.addEventListener('click', ()=>
     {
@@ -61,9 +64,25 @@
         menu_profile.classList.toggle('rotate');
     });
 
-    const token = localStorage.getItem('accessToken');
-    if(!token) window.location.replace('/login');
 
+    //verificamos si existe  local storage con el accesToken (proviene del login basico).
+    let token = localStorage.getItem('accessToken');
+    if(!token)
+    {
+        //verifico que no provenga desde el login de google o github (como son server side ellos no crean el accessToken en localStorage)
+        const n_token = "{{authToken}}";
+        if(n_token)
+        {
+            localStorage.setItem('accessToken', n_token);
+            token = localStorage.getItem('accessToken');
+            window.location.replace('/products');
+        }else 
+        {
+            window.location.replace('/login');
+        }
+        
+    } 
+    
     fetch('/api/sessions/profileInfo', 
     {
         method:'GET',

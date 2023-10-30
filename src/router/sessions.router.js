@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import { validateJWT } from "../middlewares/jwtExtractor.js";
 import passportCall from "../middlewares/passportCall.js";
 import authorization from "../middlewares/authorization.js";
+import executePolicies from "../middlewares/executePolicies.js";
 
 const usersServices = new UserManager();
 const router = Router();
@@ -39,9 +40,8 @@ router.get('/current', passportCall({ strategyType: 'jwt' }),authorization('admi
     res.send({status:"success", payload:user});
 })
 
-router.get('/profileInfo',validateJWT, async(req,res)=>
+router.get('/profileInfo',validateJWT, async(req,res)=> 
 {
-    console.log(req.user);
     res.send({status:'success', payload:req.user})
 })
 
@@ -63,12 +63,40 @@ router.get('/githubcallback',validateJWT, passportCall('github'),(req,res)=>
 })
 
 //google
-router.get('/google', passportCall('google', { scope: ['profile', 'email'], strategyType: 'OAUTH' }));
+/*router.get('/google', passportCall('google', { scope: ['profile', 'email'], strategyType: 'OAUTH' }));
 router.get('/googlecallback', validateJWT, passportCall('google', { strategyType: 'OAUTH' }), (req, res) => 
 {
-    const user = req.user;
+    const token = jwt.sign({ id: user._id, email: user.email, role: user.role, name: user.firstName }, 'buhoS3cr3t', { expiresIn: '1d' });
+    res.cookie('authCookie', token, { httpOnly: true }).send({ status: 'success', token });
+    
     res.redirect('/');
-});
+});*/
+
+/*router.get('/google',validateJWT, executePolicies('NO_AUTH'),passportCall('google',{scope:['profile','email'],strategyType:'OAUTH'}),async (req,res)=>{})
+router.get('/googlecallback',validateJWT, executePolicies('NO_AUTH'), passportCall('google',{strategyType:'OAUTH'}),async (req,res)=>
+{
+    const tokenizedUser = 
+    {
+        name: `${req.user.firstName} ${req.user.lastName}`,
+        id:req.user._id,
+        role: req.user.role,
+        library:req.user.library
+     }
+    const token = jwt.sign(tokenizedUser,'buhoS3cr3t',{expiresIn:'1d'});
+
+    res.cookie('authCookie', token, { httpOnly: true }).send({ status: 'success', token });
+    //res.clearCookie('library');
+    //es.sendSuccess('Logged In');
+    res.redirect('/');
+ })*/
+
+ router.get('/google', passportCall('google', { scope: ['profile', 'email'] }));
+ router.get('/googlecallback', passportCall('google', { failureRedirect: '/login' }), (req, res) => {
+    const user = req.user;
+    const token = jwt.sign({ id: user._id, email: user.email, role: user.role, name: user.firstName }, 'buhoS3cr3t', { expiresIn: '1d' });
+    res.cookie('authCookie', token, { httpOnly: true });
+    res.render('products', { authToken: token });
+ });
 
 router.get('/authFail', (req,res)=>
 {

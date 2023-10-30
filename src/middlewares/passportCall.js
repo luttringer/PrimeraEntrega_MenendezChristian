@@ -1,22 +1,16 @@
 import passport from "passport";
 
-const passportCall = (strategy,options={})=>
+const passportCall = (strategy, options = {}) => 
 {
-    return async(req,res,next)=>
+    return async (req, res, next) => 
     {
-        passport.authenticate(strategy,options,async(error,user,info)=>
+        passport.authenticate(strategy, options, async (error, user, info) => 
         {
-            if(error) return next(error);
-            if(!user)
-            {
-                //si no hay usuario que levantar prefiero controlarlo desde el endpoint
-                //return res.status(401).send({status:"error",error:info.message?info.message:info.toString()})
-            }
-
-            req.user = user;
+            if (error) return next(error);
+            if (user) req.user = user; //autenticacion llevada a cabo con exito
             next();
-        })(req,res,next);
-    }
+        })(req, res, next);
+    };
 }
 
 export default passportCall;
