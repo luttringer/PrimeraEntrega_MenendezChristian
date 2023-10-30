@@ -1,17 +1,22 @@
-<h1>carts list</h1>
+<link rel="stylesheet" href="/css/carrito.css">
 
-{{#if cart_filtrado}}
-    <p> id carrito: {{cart_filtrado.id}}</p>
-    <br>
-    {{#if this.productos.length}}
-        {{#each this.productos}}
-            <br>
-            <p> id producto: {{this.id_product._id}}</p>
-            <p> quantity producto: {{this.quantity}}</p>
-        {{/each}}
+<section class="cont_carrito">
+    <span><h1>tu carrito</h1></span>
+    <hr>
+    {{#if cart_filtrado}}
+        <span><p> <strong>id carrito</strong>: {{cart_filtrado.id}}</p></span>
+        <span><p> <strong>user id</strong>: {{cart_filtrado.usuario}}</p></span>
+        <hr>
+        {{#if this.productos.length}}
+            {{#each this.productos}}
+                <br>
+                <span><p> <strong>id producto</strong>: {{this.id_product._id}}</p></span>
+                <span><p> <strong>quantity producto</strong>: {{this.quantity}}</p></span>
+            {{/each}}
+        {{else}}
+            <span><p>No hay productos en el carrito.</p></span>
+        {{/if}}
     {{else}}
-        <p>No hay productos en el carrito.</p>
+        <span><p>No se encontró ningún carrito.</p></span>
     {{/if}}
-{{else}}
-    <p>No se encontró ningún carrito.</p>
-{{/if}}
+</section>

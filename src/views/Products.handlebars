@@ -58,6 +58,7 @@
     }
 
     const menu_profile = document.querySelector('#profile_hid');
+    
     menu_profile.addEventListener('click', ()=>
     {
         document.querySelector('.user_profile').classList.toggle('hidden');
@@ -67,6 +68,7 @@
 
     //verificamos si existe  local storage con el accesToken (proviene del login basico).
     let token = localStorage.getItem('accessToken');
+    
     if(!token)
     {
         //verifico que no provenga desde el login de google o github (como son server side ellos no crean el accessToken en localStorage)

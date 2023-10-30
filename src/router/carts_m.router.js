@@ -1,24 +1,18 @@
 import { Router } from "express";
+import cartsController from "../controllers/carts.controller.js";
+import passportCall from "../middlewares/passportCall.js";
+
 import CartsManager from "../dao/mongo/managers/cartsDao.js";
+import authorization from "../middlewares/authorization.js";
 
 const router = Router();
 const cartsService = new CartsManager(); 
 
-router.get("/:cid", async (req, res) => {
-    const carrito_id = req.params.cid;
+/*router.get("/:cid", async (req, res) => {
+   
+});*/
 
-    try {
-        const carritoObjeto = await cartsService.getCartsByIdWithProducts(carrito_id);
-
-        if (carritoObjeto) {
-            res.json(carritoObjeto);
-        } else {
-            res.status(400).json({ error: "Carrito no existe" });
-        }
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+router.get('/:cid', passportCall('jwt', { session: false }), cartsController.getCart);
 
 router.delete('/:cid/products/:pid', async (req, res) => {
     const carrito_id = req.params.cid;
@@ -32,7 +26,7 @@ router.delete('/:cid/products/:pid', async (req, res) => {
     }
 });
 
-router.put('/:cid', async (req, res) => {
+router.put('/:cid', authorization('user'), async (req, res) => {
     const carrito_id = req.params.cid;
     const nuevosProductos = req.body.products;
 
@@ -44,7 +38,7 @@ router.put('/:cid', async (req, res) => {
     }
 });
 
-router.put('/:cid/products/:pid', async (req, res) => {
+router.put('/:cid/products/:pid', authorization('user'), async (req, res) => {
     const carrito_id = req.params.cid;
     const producto_id = req.params.pid;
     const nuevaCantidad = req.body.quantity;
@@ -68,13 +62,6 @@ router.delete('/:cid', async (req, res) => {
     }
 });
 
-router.post("/", async (req, res) => {
-    try {
-        const newCart = await cartsService.addCart(req.body);
-        res.status(201).json({ status: "success", message: "Carrito agregado satisfactoriamente", cart: newCart });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
+router.post('/', passportCall('jwt', { session: false }), cartsController.createCartByUserId);
 
 export default router;

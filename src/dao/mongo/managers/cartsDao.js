@@ -1,6 +1,31 @@
 import cartsModel from "../models/carts.js";
 
-export default class CartsDao {
+export default class CartsDao 
+{
+
+    getCartByUserId = async (userId) => 
+    {
+        try 
+        {
+            const cart = await cartsModel.findOne({ 'user': userId }).populate('user');
+            return cart;
+        } catch (error) 
+        {
+            throw error;
+        }
+    }
+
+    createCart = async (cart) => 
+    {
+        try {
+            const newCart = new cartsModel(cart);
+            const savedCart = await newCart.save();
+            return savedCart;
+        } catch (error) {
+            throw error;
+        }
+    }
+
 
     updateProductQuantity = async (cartId, productId, quantity) => 
     {

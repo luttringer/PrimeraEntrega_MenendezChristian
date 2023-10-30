@@ -1,13 +1,13 @@
 import { Router } from "express";
 import ProductManager from "../dao/mongo/managers/productsDao.js";
 import uploader from "../services/uploadServices.js";
-
+import authorization from "../middlewares/authorization.js";
 import productsController from "../controllers/products.controller.js";
 
 const router = Router();
-const productsService = new ProductManager();                                   //instancio objeto de clase del manager de videogames
+const productsService = new ProductManager();                                  
 
-router.get('/', async(req, res)=>{                                                //endpoint para get raiz
+router.get('/', async(req, res)=>{                                                
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 3;
     const sort = req.query.sort || 'asc';
@@ -30,9 +30,9 @@ router.get('/', async(req, res)=>{                                              
     res.send({status:"success", payload:products});                              //devuelvo todos los videojuegos
 });
 
-router.post('/', uploader.array('thumbnail'), productsController.addProduct);
+router.post('/', authorization('admin'), uploader.array('thumbnail'), productsController.addProduct);
 
-router.put('/:pid', async(req, res)=>{   
+router.put('/:pid', authorization('admin'), async(req, res)=>{   
     const {pid} = req.params;
     const { title, description, category, code, status, price, stock} = req.body;
     
@@ -52,7 +52,7 @@ router.put('/:pid', async(req, res)=>{
     res.send({status:"success", message:"producto actualizado"});
 });
 
-router.delete('/:pid', async(req, res)=>{  
+router.delete('/:pid', authorization('admin'), async(req, res)=>{  
     const {pid} = req.params;
     const result = await productsService.deleteProduct(pid);
     res.send({status:"success", message:"Producto eliminado"});
