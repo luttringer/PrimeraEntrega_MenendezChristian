@@ -29,27 +29,17 @@ export default class CartsDao
 
     updateProductQuantity = async (cartId, productId, quantity) => 
     {
-        try {
-            const cart = await cartsModel.findById(cartId);
-
-            if (!cart) throw new Error(`No se encontró el carrito con ID ${cartId}`);
-            
-
-            const productToUpdate = cart.products.find((product) =>
-                product.id_product.toString() === productId
-            );
-
-            if (!productToUpdate) throw new Error(`No se encontró el producto con ID ${productId} en el carrito`);
-            
-
-            productToUpdate.quantity = quantity;
-            await cart.save();
-
-            return cart;
-        } catch (error) 
+        try 
         {
-            throw error;
-        }
+            const cart = await cartsModel.findById(cartId);
+            if (!cart) throw new Error(`No se encontró el carrito con ID ${cartId}`);
+            const productToUpdate = cart.products.find((product) =>product.id_product.toString() === productId);
+            if (!productToUpdate) cart.products.push({ id_product: productId, quantity });
+            else productToUpdate.quantity += quantity;  
+            await cart.save();
+    
+            return cart;
+        } catch (error) {throw error;}
     }
 
     removeProductFromCart = async (cartId, productId) => 

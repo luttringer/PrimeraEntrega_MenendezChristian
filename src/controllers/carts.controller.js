@@ -45,8 +45,33 @@ const getCart = async (req, res) =>
     }
 }
 
+const updateCartProducts = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const productId = req.body.productId;
+
+        let cart = await cartService.getCartByUserId(userId);
+
+        if (!cart) 
+        {
+            console.log("No existe el carrito, se crea uno nuevo.");
+            cart = await cartService.createCart({ user: userId, products: [{ id_product: productId, quantity: 1 }] });
+        } else 
+        {
+            const updateCart = await cartService.updateProductQuantity(cart._id, productId, 1);
+        }
+
+        res.status(200).send("Producto actualizado en el carrito");
+
+    } catch (error) {
+        res.status(500).send("Error: " + error.message);
+    }
+}
+
+
 export default 
 {
     createCartByUserId,
-    getCart
+    getCart,
+    updateCartProducts
 }

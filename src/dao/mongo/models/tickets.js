@@ -25,11 +25,13 @@ const schema = new mongoose.Schema({
 });
 
 // generador de codigos (cuasi unicos, nunca hay que tentar a la aleatoriedad)
-function generateUniqueCode(length) {
+function generateUniqueCode(length) 
+{
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let code = '';
   
-    for (let i = 0; i < length; i++) {
+    for (let i = 0; i < length; i++) 
+    {
       const randomIndex = Math.floor(Math.random() * characters.length);
       code += characters.charAt(randomIndex);
     }

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import cartsController from "../controllers/carts.controller.js";
 import passportCall from "../middlewares/passportCall.js";
+import { validateJWT } from "../middlewares/jwtExtractor.js";
 
 import CartsManager from "../dao/mongo/managers/cartsDao.js";
 import authorization from "../middlewares/authorization.js";
@@ -10,6 +11,7 @@ const cartsService = new CartsManager();
 
 router.get('/:cid', passportCall('jwt', { session: false }), cartsController.getCart);
 router.post('/', passportCall('jwt', { session: false }), cartsController.createCartByUserId);
+router.post('/addProductToCart',validateJWT, authorization('user'), passportCall('jwt', { session: false }), cartsController.updateCartProducts);
 
 router.delete('/:cid/products/:pid', async (req, res) => {
     const carrito_id = req.params.cid;
@@ -22,6 +24,9 @@ router.delete('/:cid/products/:pid', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+
+
+
 
 router.put('/:cid', authorization('user'), async (req, res) => {
     const carrito_id = req.params.cid;

@@ -24,4 +24,9 @@ export default class CartRepository
     {
         return this.dao.getCartsByIdWithProducts(carrito_id);
     }
+
+    updateProductQuantity = (cartId, productId, quantity)=> 
+    {
+        return this.dao.updateProductQuantity(cartId, productId, quantity);
+    }
 }
