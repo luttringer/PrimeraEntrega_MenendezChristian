@@ -11,7 +11,15 @@
 
     <a href="/products"><button>tienda</button></a>
     <form action="/api/carts" method="POST"><button type="submit">carrito</button></form>
-    <a href=""><button>mensajes (work)</button></a>
+    <a href=""><button>mensajes (disabled)</button></a>
 
-    <a href="/api/sessions/logout"><button>logout</button></a>
+    <a onclick="logout_redirect_fn();"><button>logout</button></a>
 </section>
+
+<script>
+    const logout_redirect_fn = ()=>
+    {
+        localStorage.removeItem('accessToken');
+        window.location.replace('/api/sessions/logout');
+    }
+</script>

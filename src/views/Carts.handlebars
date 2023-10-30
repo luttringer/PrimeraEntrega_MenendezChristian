@@ -6,6 +6,13 @@
     {{#if cart_filtrado}}
         <span><p> <strong>id carrito</strong>: {{cart_filtrado.id}}</p></span>
         <span><p> <strong>user id</strong>: {{cart_filtrado.usuario}}</p></span>
+
+        <div>
+            <a href="/api/products"><button>regresar tienda</button></a>
+            <a href="/"><button>regresar profile</button></a>
+        </div>
+        
+
         <hr>
         {{#if this.productos.length}}
             {{#each this.productos}}

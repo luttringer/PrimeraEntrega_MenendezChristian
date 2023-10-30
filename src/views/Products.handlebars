@@ -7,7 +7,7 @@
 
     <p id="userName"></p>
     <p id="userEmail"></p>
-    <a onclick="logout_redirect_fn();"><button class="submitBtn ">logout</button></a>
+    <a href="/"><button class="submitBtn ">profile</button></a>
     
 </section>
 
@@ -51,12 +51,6 @@
 
 
 <script>
-    const logout_redirect_fn = ()=>
-    {
-        localStorage.removeItem('accessToken');
-        window.location.replace('/api/sessions/logout');
-    }
-
     const menu_profile = document.querySelector('#profile_hid');
     
     menu_profile.addEventListener('click', ()=>

@@ -56,9 +56,9 @@ body
     margin: 0;
 }
 
-.cont_carrito>a>button, .cont_carrito>form>button 
+.cont_carrito>div>a>button, .cont_carrito>form>button 
 {
-    width: 100px;
+    width: 150px;
     height: 30px;
     font-family: 'Montserrat', sans-serif;
     border: none;
@@ -72,7 +72,7 @@ body
 
 
 
-.cont_carrito>a>button:hover 
+.cont_carrito>div>a>button:hover 
 {
     transition: background-color ease-in 1s, color ease 1s;
     background-color: var(--color-black-one);
