@@ -18,11 +18,14 @@ import passport from 'passport';
 import initializeStrategies from './config/passport.config.js';
 import dictionaryRouter from './router/dictionary.router.js';
 import cors from 'cors';
+import nodemailer from 'nodemailer';
 
 //variables de entorno del .env
 const DB_URL = process.env.DB_URL;
 const ENVPORT = process.env.PORT;
 const COOKIEPARSER =  process.env.COOKIEPARSER;
+const GMAIL_USER =  process.env.GMAIL_USER;
+const GMAIL_PASS=  process.env.GMAIL_PASS;
 
 const app = express();
 //const FileStorage = FileStore(session);      
@@ -59,3 +62,46 @@ app.use('/api/products', product_mRouter);
 app.use('/api/carts', cart_mRouter);
 app.use('/api/sessions', sessionRouter);
 app.use('/api/dictionary', dictionaryRouter);
+
+
+app.get('/mails', async(req,res)=>
+{
+    const transport = nodemailer.createTransport(
+    {
+        service:'gmail',
+        port:587,
+        auth:
+        {
+            user: GMAIL_USER,
+            pass: GMAIL_PASS
+        }
+    })
+
+    const mailRequest = 
+    {
+        from: 'yo mismo',
+        to:['luttringerezequiel@gmail.com'],
+        subject: 'hola, prueba',
+        html:
+        `
+            <h1>mapaches</h1>
+            <img src="cid:mapache">
+        `,
+        attachments:
+        [
+            {
+                filename: 'mapache.webp',
+                path: './src/public/img/others/mapache.webp'
+            },
+            {
+                filename: 'mapache.webp',
+                path: './src/public/img/others/mapache.webp',
+                cid:'mapache'
+            }
+        ]
+    }
+
+    const mailResult = await transport.sendMail(mailRequest);
+    console.log(mailResult);
+    res.sendStatus(200);
+})
