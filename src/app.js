@@ -41,9 +41,13 @@ try
 //configuracion de handlebars
 const hbs = exphbs.create();
 hbs.allowProtoPropertiesByDefault = true;
+
+
 app.engine('handlebars', hbs.engine); // Usa hbs.engine en lugar de handlebars.engine()
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/views`);
+
+
 
 //middlewars'
 app.use(cors({origin:['http://localhost:8080'],credentials:true}));

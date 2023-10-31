@@ -12,14 +12,15 @@
             <a href="/"><button>regresar profile</button></a>
         </div>
         
-
         <hr>
-        {{#if this.productos.length}}
-            {{#each this.productos}}
+        {{#if cart_filtrado.productos.length}}
+            {{#each cart_filtrado.productos}}
                 <br>
-                <span><p> <strong>id producto</strong>: {{this.id_product._id}}</p></span>
-                <span><p> <strong>quantity producto</strong>: {{this.quantity}}</p></span>
+                <span><p>{{this.f_title}} || <strong>cantidad: </strong>{{f_quantity}} || <strong>precio: </strong>{{this.f_price}}</p></span>
+                <!--<span><p> <strong>quantity producto</strong>: {{this.id_product.quantity}}</p></span>-->
             {{/each}}
+
+            <h3>total:</h3>
         {{else}}
             <span><p>No hay productos en el carrito.</p></span>
         {{/if}}

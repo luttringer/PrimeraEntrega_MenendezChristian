@@ -1,3 +1,4 @@
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
 <link rel="stylesheet" href="/css/products.css">
 
 <section class="user_profile">
@@ -117,11 +118,25 @@
 
         fetch('/api/carts/addProductToCart', requestOptions)
         .then(response => response.text())
-        .then(result => {
-            console.log(result);
+        .then(result => 
+        {
+            if(result === "Producto actualizado en el carrito")
+            {
+                Toastify({
+                    text: "carrito actualizado",
+                    duration: 3000
+                }).showToast();
+            }
         })
-        .catch(error => {
+        .catch(error => 
+        {
+            Toastify({
+                text: `ocurrio un error`,
+                duration: 3000
+            }).showToast();
             console.error(error);
         });
     }
 </script>
+
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
