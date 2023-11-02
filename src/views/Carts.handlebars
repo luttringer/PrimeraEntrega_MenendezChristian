@@ -50,13 +50,14 @@
 
         fetch('/api/carts/' + cartId + '/purchase', requestOptions)
             .then(response => {
-                return response.json(); 
+                return response.text(); 
             })
             .then(result => {
-                console.log("Resultado:", result);
+                alert(result);
             })
             .catch(error => {
-                console.error("Error:", error);
+                console.log(error)
+                alert(error);
             });
     }
 </script>

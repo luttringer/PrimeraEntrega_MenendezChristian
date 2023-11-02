@@ -112,9 +112,9 @@ const purchaseCart = async (req, res) => {
         const ticket = await ticketService.createTicket(userId, cartId, sumProducts);
 
         console.log(ticket);
-        res.status(200).json({ message: "Compra exitosa" });
+        //res.status(200).send( "Compra exitosa" );
     } catch (error) {
-        res.status(500).json({ error: "Error: " + error.message });
+        //res.status(500).send(  "Error: " + error.message);
     }
 }
 
