@@ -100,6 +100,8 @@ const purchaseCart = async (req, res) => {
             if (!product) return res.status(404).send("Error: Producto no encontrado");
             if (product.stock >= productInCart.quantity) purchasedProducts.push(productInCart);
             
+            product.stock -= productInCart.quantity;
+            const updateProduct = await productService.updateProduct(productId,product);
         }
 
         // Actualiza el carrito con los productos que no se compraron
