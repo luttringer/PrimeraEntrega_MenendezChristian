@@ -49,13 +49,14 @@
         };
 
         fetch('/api/carts/' + cartId + '/purchase', requestOptions)
-        .then(response => response.text())
-        .then(result => {
-            console.log("hola:" + result);
-        })
-        .catch(error => 
-        {
-            console.log("error: " + error);
-        });
+            .then(response => {
+                return response.json(); 
+            })
+            .then(result => {
+                console.log("Resultado:", result);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
     }
 </script>

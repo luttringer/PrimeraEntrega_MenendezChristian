@@ -27,9 +27,6 @@ router.delete('/:cid/products/:pid', async (req, res) => {
     }
 });
 
-
-
-
 router.put('/:cid', authorization('user'), async (req, res) => {
     const carrito_id = req.params.cid;
     const nuevosProductos = req.body.products;
