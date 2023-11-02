@@ -38,6 +38,7 @@
         let token = localStorage.getItem('accessToken');
         let cartId = "{{cart_filtrado.id}}";
         let sumTotalPrice = {{sumPrice cart_filtrado.productos}};
+        const url = '/api/carts/' + cartId + '/purchase';
 
         const requestOptions = {
         method: 'POST',
@@ -48,16 +49,18 @@
         body: JSON.stringify({ sumTotalPrice: sumTotalPrice })
         };
 
-        fetch('/api/carts/' + cartId + '/purchase', requestOptions)
+        fetch(url, requestOptions)
             .then(response => {
                 return response.text(); 
             })
             .then(result => {
-                alert(result);
+                if( result === "Compra exitosa")
+                {
+                    alert("whyt?")
+                }
             })
             .catch(error => {
                 console.log(error)
-                alert(error);
             });
     }
 </script>

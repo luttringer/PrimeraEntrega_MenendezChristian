@@ -46,7 +46,7 @@ const hbs = exphbs.create({
         {
             let total = 0;
             for (const product of products) {
-                total += product.f_price;
+                total += product.f_price * product.f_quantity;
             }
             return total;
         }

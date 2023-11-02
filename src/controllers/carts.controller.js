@@ -55,7 +55,6 @@ const getCart = async (req, res) => {
     }
 }
 
-
 const updateCartProducts = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -79,7 +78,8 @@ const updateCartProducts = async (req, res) => {
     }
 }
 
-const purchaseCart = async (req, res) => {
+const purchaseCart = async (req, res) => 
+{
     try {
         const userId = req.user.id;
         const cartId = req.params.cid;
@@ -112,9 +112,9 @@ const purchaseCart = async (req, res) => {
         const ticket = await ticketService.createTicket(userId, cartId, sumProducts);
 
         console.log(ticket);
-        //res.status(200).send( "Compra exitosa" );
+        return res.status(200).send("Compra exitosa");
     } catch (error) {
-        //res.status(500).send(  "Error: " + error.message);
+        return res.status(500).send("Error: " + error.message);
     }
 }
 
