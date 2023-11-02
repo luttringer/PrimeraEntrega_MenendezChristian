@@ -51,11 +51,11 @@
         fetch('/api/carts/' + cartId + '/purchase', requestOptions)
         .then(response => response.text())
         .then(result => {
-            console.log(result);
+            console.log("hola:" + result);
         })
         .catch(error => 
         {
-            console.log(error);
+            console.log("error: " + error);
         });
     }
 </script>

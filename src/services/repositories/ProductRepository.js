@@ -14,4 +14,9 @@ export default class ProductRepository
     {
         return this.dao.addProduct(newProduct);
     }
+
+    getProductById = (id)=> 
+    {
+        return this.dao.getProductsBy(id);
+    }
 }
