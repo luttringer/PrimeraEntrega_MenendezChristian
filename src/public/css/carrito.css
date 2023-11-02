@@ -56,7 +56,7 @@ body
     margin: 0;
 }
 
-.cont_carrito>div>a>button, .cont_carrito>form>button 
+.cont_carrito>div>a>button, .cont_carrito>form>button
 {
     width: 150px;
     height: 30px;
@@ -70,12 +70,28 @@ body
     cursor: pointer;
 }
 
+.cont_carrito>span>h3 
+{
+    margin: 0;
+    padding: 0;
+}
 
+.buy_btn
+{
+    background-color: greenyellow!important;
+}
 
 .cont_carrito>div>a>button:hover 
 {
     transition: background-color ease-in 1s, color ease 1s;
     background-color: var(--color-black-one);
+    color: var(--color-yellow-one);
+}
+
+.buy_btn:hover  
+{
+    transition: background-color ease-in 1s, color ease 1s;
+    background-color: var(--color-black-one)!important;
     color: var(--color-yellow-one);
 }
 

@@ -39,7 +39,20 @@ try
 
 
 //configuracion de handlebars
-const hbs = exphbs.create();
+const hbs = exphbs.create({
+    helpers: 
+    {
+        sumPrice: function (products) 
+        {
+            let total = 0;
+            for (const product of products) {
+                total += product.f_price;
+            }
+            return total;
+        }
+    }
+});
+
 hbs.allowProtoPropertiesByDefault = true;
 
 

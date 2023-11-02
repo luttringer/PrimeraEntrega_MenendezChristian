@@ -79,10 +79,25 @@ const updateCartProducts = async (req, res) => {
     }
 }
 
+const purchaseCart = async (req, res) => 
+{
+    try
+    {
+        const userId = req.user.id;
+        const cartId = req.params.cid;
+        const sumProducts = req.body.sumTotalPrice;
+
+        console.log("llegamos hasta aqui?", userId, cartId, sumProducts);
+    }catch (error)
+    {
+
+    }
+}
 
 export default 
 {
     createCartByUserId,
     getCart,
-    updateCartProducts
+    updateCartProducts,
+    purchaseCart
 }

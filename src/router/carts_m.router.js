@@ -13,6 +13,8 @@ router.get('/:cid', passportCall('jwt', { session: false }), cartsController.get
 router.post('/', passportCall('jwt', { session: false }), cartsController.createCartByUserId);
 router.post('/addProductToCart',validateJWT, authorization('user'), passportCall('jwt', { session: false }), cartsController.updateCartProducts);
 
+router.post('/:cid/purchase', validateJWT, authorization('user'), passportCall('jwt', { session: false }), cartsController.purchaseCart);
+
 router.delete('/:cid/products/:pid', async (req, res) => {
     const carrito_id = req.params.cid;
     const producto_id = req.params.pid;
