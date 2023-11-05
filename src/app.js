@@ -18,14 +18,14 @@ import passport from 'passport';
 import initializeStrategies from './config/passport.config.js';
 import dictionaryRouter from './router/dictionary.router.js';
 import cors from 'cors';
-import nodemailer from 'nodemailer';
+
+import MailingService from './services/MailingService.js';
 
 //variables de entorno del .env
 const DB_URL = process.env.DB_URL;
 const ENVPORT = process.env.PORT;
 const COOKIEPARSER =  process.env.COOKIEPARSER;
-const GMAIL_USER =  process.env.GMAIL_USER;
-const GMAIL_PASS=  process.env.GMAIL_PASS;
+
 
 const app = express();
 //const FileStorage = FileStore(session);      
@@ -38,7 +38,7 @@ try
 } catch (error) {console.error('Error de conexión a la base de datos:', error);}
 
 
-//configuracion de handlebars
+//configuracion de handlebars (se agrega funcion de hbs para calcular precio total en carrito)
 const hbs = exphbs.create({
     helpers: 
     {
@@ -56,13 +56,13 @@ const hbs = exphbs.create({
 hbs.allowProtoPropertiesByDefault = true;
 
 
-app.engine('handlebars', hbs.engine); // Usa hbs.engine en lugar de handlebars.engine()
+app.engine('handlebars', hbs.engine); 
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/views`);
 
 
 
-//middlewars'
+//middlewars
 app.use(cors({origin:['http://localhost:8080'],credentials:true}));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
@@ -81,18 +81,10 @@ app.use('/api/sessions', sessionRouter);
 app.use('/api/dictionary', dictionaryRouter);
 
 
+//mailing example
 app.get('/mails', async(req,res)=>
 {
-    const transport = nodemailer.createTransport(
-    {
-        service:'gmail',
-        port:587,
-        auth:
-        {
-            user: GMAIL_USER,
-            pass: GMAIL_PASS
-        }
-    })
+    const mailService = new MailingService();
 
     const mailRequest = 
     {
@@ -118,7 +110,6 @@ app.get('/mails', async(req,res)=>
         ]
     }
 
-    const mailResult = await transport.sendMail(mailRequest);
-    console.log(mailResult);
+    const mailResult = await mailService.sendMail(mailRequest);
     res.sendStatus(200);
 })
