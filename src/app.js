@@ -18,6 +18,7 @@ import passport from 'passport';
 import initializeStrategies from './config/passport.config.js';
 import dictionaryRouter from './router/dictionary.router.js';
 import cors from 'cors';
+import twilio from 'twilio';
 
 import MailingService from './services/MailingService.js';
 
@@ -25,6 +26,10 @@ import MailingService from './services/MailingService.js';
 const DB_URL = process.env.DB_URL;
 const ENVPORT = process.env.PORT;
 const COOKIEPARSER =  process.env.COOKIEPARSER;
+
+
+//twilio config init
+const twilioClient = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
 
 
 const app = express();
@@ -111,5 +116,19 @@ app.get('/mails', async(req,res)=>
     }
 
     const mailResult = await mailService.sendMail(mailRequest);
+    res.sendStatus(200);
+})
+
+//sms example 
+
+app.get('/twilio', async (req,res)=>
+{
+    const result = await twilioClient.messages.create(
+    {
+        from: process.env.TWILIO_TEST_NUMBER,
+        to:'+59892181416',
+        body:'hola chris'
+    })
+    console.log(result);
     res.sendStatus(200);
 })
