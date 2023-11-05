@@ -120,7 +120,6 @@ app.get('/mails', async(req,res)=>
 })
 
 //sms example 
-
 app.get('/twilio', async (req,res)=>
 {
     const result = await twilioClient.messages.create(

@@ -3,6 +3,7 @@ import ProductManager from "../dao/mongo/managers/productsDao.js";
 import uploader from "../services/uploadServices.js";
 import authorization from "../middlewares/authorization.js";
 import productsController from "../controllers/products.controller.js";
+import { generateProducts } from "../mocks/products.js";
 
 const router = Router();
 const productsService = new ProductManager();                                  
@@ -56,6 +57,19 @@ router.delete('/:pid', authorization('admin'), async(req, res)=>{
     const {pid} = req.params;
     const result = await productsService.deleteProduct(pid);
     res.send({status:"success", message:"Producto eliminado"});
-});                      
+});      
+
+router.get('/mockingproducts', async(req,res)=>
+{
+    const products = [];
+
+    for(let i=0;i<100;i++)
+    {
+        const mockProduct = generateProducts();
+        products.unshift(mockProduct);
+    }
+
+    res.send({status:'success', payload:products});
+});
                          
 export default router;
