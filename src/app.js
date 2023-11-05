@@ -19,6 +19,7 @@ import initializeStrategies from './config/passport.config.js';
 import dictionaryRouter from './router/dictionary.router.js';
 import cors from 'cors';
 import twilio from 'twilio';
+import errorHandler from './middlewares/errorHandler.js';
 
 import MailingService from './services/MailingService.js';
 
@@ -73,6 +74,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static((`${__dirname}/public`)));
 app.use(cookieParser(COOKIEPARSER));
+app.use(errorHandler);
 
 
 //configuracion de passport, ejecucion
