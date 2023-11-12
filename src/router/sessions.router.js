@@ -16,8 +16,20 @@ router.post('/register', async(req,res)=>
     //utilizo mi passport strategy para register.
     passport.authenticate('register', (error, result, info) => 
     {
-        if (error) return res.status(500).send({ status: "error", error: "Internal server error" });
-        if (!result) return res.status(400).send({ status: "error", error: info.message ? info.message : info.toString() });
+        if (error)
+        {
+            req.logger.error(`[${new Date().toISOString()}] Error: Internal server error`);
+            return res.status(500);
+        } 
+        
+        if (!result)
+        {
+            req.logger.error(`[${new Date().toISOString()}] Error: ${info.message ? info.message : info.toString()}`);
+            return res.status(400);
+        } 
+
+        req.logger.info(`[${new Date().toISOString()}] Registro llevado a cabo con exito`);
+        req.logger.debug(`[${new Date().toISOString()}] Registro exitoso, id: ${result._id}`);
         res.status(200).send({ status: "success", payload: result._id });
     })(req, res);
 })
@@ -25,12 +37,21 @@ router.post('/register', async(req,res)=>
 router.post('/login', (req, res) => {
     passport.authenticate('login', (error, user, info) => 
     {
-        if (error) return res.status(500).send({ status: "error", error: "Internal server error" });
-        if (!user) return res.status(400).send({ status: "error", error: info.message ? info.message : info.toString() });
+        if (error)
+        {
+            req.logger.error(`[${new Date().toISOString()}] Error: Internal server error`);
+            return res.status(500);
+        } 
+        if (!user)
+        {
+            req.logger.error(`[${new Date().toISOString()}] Error: ${info.message ? info.message : info.toString()}`);
+            return res.status(400).send({ status: "error"});
+        }
 
         //configuracion de token JWT y cookie asociada
         const token = jwt.sign({ id: user._id, email: user.email, role: user.role, name: user.firstName }, 'buhoS3cr3t', { expiresIn: '1d' });
         res.cookie('authCookie', token, { httpOnly: true }).send({ status: 'success', token });
+        req.logger.info(`[${new Date().toISOString()}] Login exitoso`);
     })(req, res);
 });
 
@@ -56,6 +77,7 @@ router.get('/profileInfo',validateJWT, async(req,res)=>
 router.get('/logout', async(req,res)=>
 {
     //elimino jwt token y redirecciono.
+    req.logger.info(`[${new Date().toISOString()}] Logout exitoso`);
     res.clearCookie('authCookie'); 
     res.redirect('/');
 })
@@ -66,6 +88,7 @@ router.get('/logout', async(req,res)=>
 router.get('/github', passportCall('github'),(req,res)=>{})
 router.get('/githubcallback',validateJWT, passportCall('github'),(req,res)=>
 {
+    req.logger.info(`[${new Date().toISOString()}] Login exitoso por github`);
     const user = req.user;
     res.redirect('/');
 })
@@ -76,11 +99,13 @@ router.get('/googlecallback', passportCall('google', { failureRedirect: '/login'
     const token = jwt.sign({ id: user._id, email: user.email, role: user.role, name: user.firstName }, 'buhoS3cr3t', { expiresIn: '1d' });
     res.cookie('authCookie', token, { httpOnly: true });
     res.render('products', { authToken: token });
+    req.logger.info(`[${new Date().toISOString()}] Login exitoso por google`);
  });
 
 router.get('/authFail', (req,res)=>
 {
-    res.status(401).send({status:"error", error:"Error de autenticación"});
+    req.logger.error(`[${new Date().toISOString()}] Error: Hubo un fallo en la autenticacion del usuario`);
+    res.status(401).send({status:"error"});
 })
 
 

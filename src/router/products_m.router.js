@@ -15,20 +15,12 @@ router.get('/', async(req, res)=>{
     const category = req.query.category || null; // Capturar el parámetro "category"
     const status = req.query.status || null;     // Capturar el parámetro "status"
 
-    // Construir un objeto de consulta en función de los parámetros proporcionados
-    const queryObject = {};
-
-    if (category) {
-        queryObject.category = category; // Agregar filtro por categoría si se proporciona
-    }
-
-    if (status) {
-        queryObject.status = status; // Agregar filtro por estado si se proporciona
-    }
-
+    if (category) queryObject.category = category;
+    if (status) queryObject.status = status; 
+    
     const products = await productsService.getProductsPaginated(limit, page, queryObject, sort);
 
-    res.send({status:"success", payload:products});                              //devuelvo todos los videojuegos
+    res.send({status:"success", payload:products});
 });
 
 router.post('/', authorization('admin'), uploader.array('thumbnail'), productsController.addProduct);
@@ -48,15 +40,22 @@ router.put('/:pid', authorization('admin'), async(req, res)=>{
     }
     
     const product = await productsService.getProductsBy({_id:pid});
-    if(!product) return res.status(400).send({status:"error", error:"Producto incorrecto"});
+    if(!product)
+    {
+        req.logger.warning(`[${new Date().toISOString()}] Alerta: Se intento agregar un producto con formato incorrecto`);
+        return res.status(400);
+    };
     await productsService.updateProduct(pid, updateProduct);
-    res.send({status:"success", message:"producto actualizado"});
+    req.logger.info(`[${new Date().toISOString()}] Producto actualizado con exito`);
+    req.logger.debug(`[${new Date().toISOString()}] Producto actualizado: ${updateProduct}`);
+    res.send({status:"success"});
 });
 
 router.delete('/:pid', authorization('admin'), async(req, res)=>{  
     const {pid} = req.params;
     const result = await productsService.deleteProduct(pid);
-    res.send({status:"success", message:"Producto eliminado"});
+    req.logger.info(`[${new Date().toISOString()}] Poducto eliminado con exito`);
+    res.send({status:"success"});
 });      
 
 router.get('/mockingproducts', async(req,res)=>
