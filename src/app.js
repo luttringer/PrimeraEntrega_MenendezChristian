@@ -20,9 +20,8 @@ import dictionaryRouter from './router/dictionary.router.js';
 import cors from 'cors';
 import twilio from 'twilio';
 import errorHandler from './middlewares/errorHandler.js';
-
+import attachLogger from './middlewares/attachLogger.js';
 import MailingService from './services/MailingService.js';
-import winston from 'winston';
 
 //variables de entorno del .env
 const DB_URL = process.env.DB_URL;
@@ -32,41 +31,17 @@ const COOKIEPARSER =  process.env.COOKIEPARSER;
 
 //twilio config init
 const twilioClient = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
-
-
 const app = express();
-
-const winston_levels = 
-{
-    fatal: 0,
-    error: 1,
-    warning: 2,
-    info: 3,
-    http: 4,
-    debug: 5
-};
-
-const logger = winston.createLogger(
-{
-    levels: winston_levels,
-    transports:
-    [
-        new winston.transports.Console({level:'debug'}),                            //desarrollo
-        new winston.transports.Console({level:'info'}),                             //produccion
-        new winston.transports.File({filename:'./errors.log',level:'error'})        //logs de errores
-    ]
-})
-
 
 
 //const FileStorage = FileStore(session);      
 const PORT = ENVPORT || 8080;
-const server = app.listen(PORT, ()=>logger.debug(`escuchando en puerto ${PORT}`));
+const server = app.listen(PORT, ()=>console.log(`escuchando en puerto ${PORT}`));
 try 
 {
     const connection = await mongoose.connect(DB_URL, {useNewUrlParser: true,useUnifiedTopology: true});
-    logger.debug(`Conexión a la base de datos exitosa`);
-} catch (error) {logger.error(`[${new Date().toLocaleDateString()}] Error de conexión a la base de datos: ${error}`)}
+    console.log(`Conexión a la base de datos exitosa`);
+} catch (error) {console.log(`[${new Date().toLocaleDateString()}] Error de conexión a la base de datos: ${error}`)}
 
 
 //configuracion de handlebars (se agrega funcion de hbs para calcular precio total en carrito)
@@ -94,12 +69,14 @@ app.set('views', `${__dirname}/views`);
 
 
 //middlewars
+app.use(attachLogger);
 app.use(cors({origin:['http://localhost:8080'],credentials:true}));
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static((`${__dirname}/public`)));
 app.use(cookieParser(COOKIEPARSER));
 app.use(errorHandler);
+
 
 
 //configuracion de passport, ejecucion
@@ -160,7 +137,7 @@ app.get('/twilio', async (req,res)=>
 })
 
 //logger endpoint 
-app.get('/loggerTest', async(req,res)=>
+app.get('/loggerTest', attachLogger, async(req,res)=>
 {
     logger.log('debug', "127.0.0.1 - there's no place like home");
     logger.log('info', "127.0.0.1 - there's no place like home");
