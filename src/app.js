@@ -25,8 +25,8 @@ import MailingService from './services/MailingService.js';
 
 //variables de entorno del .env
 const DB_URL = process.env.DB_URL;
-const ENVPORT = process.env.PORT;
-const COOKIEPARSER =  process.env.COOKIEPARSER;
+const ENVPORT =  process.env.PORT;
+const COOKIEPARSER =   process.env.COOKIEPARSER;
 
 
 //twilio config init

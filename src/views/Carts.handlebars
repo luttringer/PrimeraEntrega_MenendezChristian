@@ -33,7 +33,7 @@
 
 
 <script>
-    const buy_cart = ()=> 
+    const buy_cart = async ()=> 
     {
         let token = localStorage.getItem('accessToken');
         let cartId = "{{cart_filtrado.id}}";
@@ -51,12 +51,12 @@
 
         fetch(url, requestOptions)
             .then(response => {
-                return response.text(); 
+                return response.json(); 
             })
             .then(result => {
-                if( result === "Compra exitosa")
+                if( result.status === 200)
                 {
-                    alert("whyt?")
+                    alert("compra exitosa!")
                 }
             })
             .catch(error => {
