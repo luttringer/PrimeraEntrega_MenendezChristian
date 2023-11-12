@@ -38,12 +38,12 @@ const app = express();
 
 const winston_levels = 
 {
-    debug: 0,
-    http: 1,
-    info: 2,
-    warning: 3,
-    error: 4,
-    fatal: 5,
+    fatal: 0,
+    error: 1,
+    warning: 2,
+    info: 3,
+    http: 4,
+    debug: 5
 };
 
 const logger = winston.createLogger(
@@ -52,8 +52,8 @@ const logger = winston.createLogger(
     transports:
     [
         new winston.transports.Console({level:'debug'}),                            //desarrollo
-        //new winston.transports.Console({level:'info'}),                             //produccion
-        new winston.transports.File({level:'error',filename:'./errors.log'})        //logs de errores
+        new winston.transports.Console({level:'info'}),                             //produccion
+        new winston.transports.File({filename:'./errors.log',level:'error'})        //logs de errores
     ]
 })
 
@@ -61,12 +61,12 @@ const logger = winston.createLogger(
 
 //const FileStorage = FileStore(session);      
 const PORT = ENVPORT || 8080;
-const server = app.listen(PORT, ()=>logger.log('debug', `escuchando en puerto ${PORT}`));
+const server = app.listen(PORT, ()=>logger.debug(`escuchando en puerto ${PORT}`));
 try 
 {
     const connection = await mongoose.connect(DB_URL, {useNewUrlParser: true,useUnifiedTopology: true});
-    logger.log('debug', `Conexión a la base de datos exitosa`);
-} catch (error) {logger.log('error', `[${new Date().toLocaleDateString()}]Error de conexión a la base de datos: ${error}`)}
+    logger.debug(`Conexión a la base de datos exitosa`);
+} catch (error) {logger.error(`[${new Date().toLocaleDateString()}] Error de conexión a la base de datos: ${error}`)}
 
 
 //configuracion de handlebars (se agrega funcion de hbs para calcular precio total en carrito)
@@ -162,14 +162,11 @@ app.get('/twilio', async (req,res)=>
 //logger endpoint 
 app.get('/loggerTest', async(req,res)=>
 {
-    logger.log('silly', "127.0.0.1 - there's no place like home");
     logger.log('debug', "127.0.0.1 - there's no place like home");
-    logger.log('verbose', "127.0.0.1 - there's no place like home");
     logger.log('info', "127.0.0.1 - there's no place like home");
-    logger.log('warn', "127.0.0.1 - there's no place like home");
     logger.log('error', "127.0.0.1 - there's no place like home");
     logger.info( "127.0.0.1 - there's no place like home");
-    logger.warn("127.0.0.1 - there's no place like home");
+    logger.warning("127.0.0.1 - there's no place like home");
     logger.error("127.0.0.1 - there's no place like home");
     res.sendStatus(200);
 })
