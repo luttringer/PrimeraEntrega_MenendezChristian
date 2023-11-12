@@ -139,11 +139,10 @@ app.get('/twilio', async (req,res)=>
 //logger endpoint 
 app.get('/loggerTest', attachLogger, async(req,res)=>
 {
-    logger.log('debug', "127.0.0.1 - there's no place like home");
-    logger.log('info', "127.0.0.1 - there's no place like home");
-    logger.log('error', "127.0.0.1 - there's no place like home");
-    logger.info( "127.0.0.1 - there's no place like home");
-    logger.warning("127.0.0.1 - there's no place like home");
-    logger.error("127.0.0.1 - there's no place like home");
+    logger.log('debug', "prueba logger");
+    logger.log('http', "prueba logger");
+    logger.log('info', "prueba logger");
+    logger.log('error', "prueba logger");
+    logger.log('fatal', "prueba logger");
     res.sendStatus(200);
 })
