@@ -23,9 +23,9 @@ router.get('/', async(req, res)=>{
     res.send({status:"success", payload:products});
 });
 
-router.post('/', authorization('admin'), uploader.array('thumbnail'), productsController.addProduct);
+router.post('/', authorization(['admin','premium']), uploader.array('thumbnail'), productsController.addProduct);
 
-router.put('/:pid', authorization('admin'), async(req, res)=>{   
+router.put('/:pid', authorization(['admin']), async(req, res)=>{   
     const {pid} = req.params;
     const { title, description, category, code, status, price, stock} = req.body;
     
@@ -51,7 +51,7 @@ router.put('/:pid', authorization('admin'), async(req, res)=>{
     res.send({status:"success"});
 });
 
-router.delete('/:pid', authorization('admin'), async(req, res)=>{  
+router.delete('/:pid', authorization(['admin']), async(req, res)=>{  
     const {pid} = req.params;
     const result = await productsService.deleteProduct(pid);
     req.logger.info(`[${new Date().toISOString()}] Poducto eliminado con exito`);

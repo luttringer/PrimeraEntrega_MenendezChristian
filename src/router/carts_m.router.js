@@ -11,9 +11,9 @@ const cartsService = new CartsManager();
 
 router.get('/:cid', passportCall('jwt', { session: false }), cartsController.getCart);
 router.post('/', passportCall('jwt', { session: false }), cartsController.createCartByUserId);
-router.post('/addProductToCart',validateJWT, authorization('user'), passportCall('jwt', { session: false }), cartsController.updateCartProducts);
+router.post('/addProductToCart',validateJWT, authorization(['user']), passportCall('jwt', { session: false }), cartsController.updateCartProducts);
 
-router.post('/:cid/purchase', validateJWT, authorization('user'), passportCall('jwt', { session: false }), cartsController.purchaseCart);
+router.post('/:cid/purchase', validateJWT, authorization(['user']), passportCall('jwt', { session: false }), cartsController.purchaseCart);
 
 router.delete('/:cid/products/:pid', async (req, res) => {
     const carrito_id = req.params.cid;
@@ -30,7 +30,7 @@ router.delete('/:cid/products/:pid', async (req, res) => {
     }
 });
 
-router.put('/:cid', authorization('user'), async (req, res) => {
+router.put('/:cid', authorization(['user']), async (req, res) => {
     const carrito_id = req.params.cid;
     const nuevosProductos = req.body.products;
 
@@ -47,7 +47,7 @@ router.put('/:cid', authorization('user'), async (req, res) => {
     }
 });
 
-router.put('/:cid/products/:pid', authorization('user'), async (req, res) => {
+router.put('/:cid/products/:pid', authorization(['user']), async (req, res) => {
     const carrito_id = req.params.cid;
     const producto_id = req.params.pid;
     const nuevaCantidad = req.body.quantity;

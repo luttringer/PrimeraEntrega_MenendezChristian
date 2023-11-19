@@ -1,7 +1,4 @@
-//configuracion para utilizar .env
-//import dotenv from 'dotenv';
-//dotenv.config();
-
+import config from '../config.js';
 import express from 'express';
 import exphbs from 'express-handlebars';
 import mongoose from 'mongoose';
@@ -43,13 +40,13 @@ if(cluster.isPrimary)
 }else 
 {
     //variables de entorno del .env
-    const DB_URL = process.env.DB_URL;
-    const ENVPORT =  process.env.PORT;
-    const COOKIEPARSER =   process.env.COOKIEPARSER;
+    const DB_URL = config.DB_URL;
+    const ENVPORT =  config.PORT;
+    const COOKIEPARSER =   config.COOKIEPARSER;
 
 
     //twilio config init
-    const twilioClient = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
+    const twilioClient = twilio(config.TWILIO_SID, config.TWILIO_AUTH_TOKEN);
     const app = express();
 
 
@@ -147,7 +144,7 @@ if(cluster.isPrimary)
     {
         const result = await twilioClient.messages.create(
         {
-            from: process.env.TWILIO_TEST_NUMBER,
+            from: config.TWILIO_TEST_NUMBER,
             to:'+59892181416',
             body:'hola chris'
         })

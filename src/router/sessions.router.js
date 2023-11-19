@@ -55,7 +55,7 @@ router.post('/login', (req, res) => {
     })(req, res);
 });
 
-router.get('/current', passportCall('jwt'),authorization('user'),(req,res)=>
+router.get('/current', passportCall('jwt'), authorization(['user']),(req,res)=>
 {
     const user = req.user;
 
