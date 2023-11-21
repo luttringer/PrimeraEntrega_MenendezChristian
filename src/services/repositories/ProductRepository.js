@@ -17,7 +17,7 @@ export default class ProductRepository
 
     getProductById = (id)=> 
     {
-        return this.dao.getProductsBy(id);
+        return this.dao.getProductById(id);
     }
 
     updateProduct = (id, product)=>

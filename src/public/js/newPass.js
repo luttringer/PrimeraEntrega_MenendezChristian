@@ -22,7 +22,6 @@ form.addEventListener('submit', async e =>
             });
         } else 
         {
-            console.log(result.message)
             Swal.fire({
                 icon: 'error',
                 title: 'Error',

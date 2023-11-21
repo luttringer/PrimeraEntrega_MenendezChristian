@@ -43,5 +43,17 @@ export default class UserManager
           throw error;
         }
     };
+
+    getUserById = async (userId) => 
+    {
+        try 
+        {
+            const user = await userModel.findOne({ '_id': userId });
+            return user;
+        } catch (error) 
+        {
+            throw error;
+        }
+    }
       
 }

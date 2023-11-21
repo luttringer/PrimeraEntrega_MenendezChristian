@@ -5,6 +5,11 @@ export default class UserRepository
         this.dao = dao;
     }
 
+    getUserById = (idUser) =>
+    {
+        return this.dao.getUserById(idUser);
+    }
+    
     getUserByEmail = (emailUser) =>
     {
         return this.dao.getByMongose(emailUser);
