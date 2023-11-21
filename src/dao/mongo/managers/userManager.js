@@ -25,4 +25,23 @@ export default class UserManager
     {
         return userModel.findOne({ resetToken: token });
     }
+
+    changeUserRole = async (userId) => 
+    {
+        try 
+        {
+          const user = await userModel.findById(userId);
+      
+          if (!user) return null;
+      
+          user.role = user.role === 'user' ? 'premium' : 'user';
+          const updatedUser = await user.save();
+          return updatedUser;
+        } catch (error) 
+        {
+          console.error(error);
+          throw error;
+        }
+    };
+      
 }

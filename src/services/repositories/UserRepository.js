@@ -14,4 +14,9 @@ export default class UserRepository
     {
         return this.dao.getUserByResetToken(token);
     }
+    
+    changeUserRole = (userId) =>
+    {
+        return this.dao.changeUserRole(userId);
+    }
 }
