@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer';
+import config from '../../config.js';
 
 export default class MailingService 
 {
@@ -10,8 +11,8 @@ export default class MailingService
             port:587,
             auth:
             {
-                user: process.env.GMAIL_USER,
-                pass: process.env.GMAIL_PASS
+                user: config.GMAIL_USER,
+                pass: config.GMAIL_PASS
             }
         })
     }

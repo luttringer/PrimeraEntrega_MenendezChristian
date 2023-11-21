@@ -13,6 +13,16 @@ const schema = new mongoose.Schema(
             type:String,
             enum:['user','admin','superadmin','premium'],
             default: 'user'
+        },
+        resetToken: 
+        {
+            type:String,
+            default: ''
+        },
+        resetTokenExpiry: 
+        {
+            type:Date,
+            default: ''
         }
     }
 )

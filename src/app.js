@@ -18,7 +18,7 @@ import cors from 'cors';
 import twilio from 'twilio';
 import errorHandler from './middlewares/errorHandler.js';
 import attachLogger from './middlewares/attachLogger.js';
-import MailingService from './services/MailingService.js';
+
 import cluster from 'cluster';
 import os from 'os';
 
@@ -104,40 +104,6 @@ if(cluster.isPrimary)
     app.use('/api/carts', cart_mRouter);
     app.use('/api/sessions', sessionRouter);
     app.use('/api/dictionary', dictionaryRouter);
-
-
-    //mailing example
-    app.get('/mails', async(req,res)=>
-    {
-        const mailService = new MailingService();
-
-        const mailRequest = 
-        {
-            from: 'yo mismo',
-            to:['luttringerezequiel@gmail.com'],
-            subject: 'hola, prueba',
-            html:
-            `
-                <h1>mapaches</h1>
-                <img src="cid:mapache">
-            `,
-            attachments:
-            [
-                {
-                    filename: 'mapache.webp',
-                    path: './src/public/img/others/mapache.webp'
-                },
-                {
-                    filename: 'mapache.webp',
-                    path: './src/public/img/others/mapache.webp',
-                    cid:'mapache'
-                }
-            ]
-        }
-
-        const mailResult = await mailService.sendMail(mailRequest);
-        res.sendStatus(200);
-    })
 
     //sms example 
     app.get('/twilio', async (req,res)=>

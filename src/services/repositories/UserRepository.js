@@ -7,6 +7,11 @@ export default class UserRepository
 
     getUserByEmail = (emailUser) =>
     {
-        return this.dao.getBy(emailUser);
+        return this.dao.getByMongose(emailUser);
+    }
+
+    getUserByResetToken = (token) => 
+    {
+        return this.dao.getUserByResetToken(token);
     }
 }

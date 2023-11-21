@@ -86,6 +86,8 @@ router.get('/logout', async(req,res)=>
 
 router.get('/resetPass/:email', userController.restartPass);
 
+router.get('/resetPassword', userController.renderResetPasswordPage);
+router.post('/resetPassword', userController.renderResetPasswordPage);
 
 //autenticacion de terceros con passport
 //github

@@ -12,8 +12,17 @@ export default class UserManager
         return userModel.findOne(param).lean();
     }
 
+    getByMongose =(param)=>
+    {
+        return userModel.findOne(param);
+    }
+
     create = (user)=>{
         return userModel.create(user);
     }
 
+    getUserByResetToken = (token) => 
+    {
+        return userModel.findOne({ resetToken: token });
+    }
 }
