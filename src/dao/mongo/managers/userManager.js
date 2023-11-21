@@ -15,4 +15,5 @@ export default class UserManager
     create = (user)=>{
         return userModel.create(user);
     }
+
 }

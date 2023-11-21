@@ -7,9 +7,11 @@ import { validateJWT } from "../middlewares/jwtExtractor.js";
 import passportCall from "../middlewares/passportCall.js";
 import authorization from "../middlewares/authorization.js";
 import executePolicies from "../middlewares/executePolicies.js";
+import userController from "../controllers/user.controller.js";
 
 const usersServices = new UserManager();
 const router = Router();
+
 
 router.post('/register', async(req,res)=>
 {
@@ -81,6 +83,8 @@ router.get('/logout', async(req,res)=>
     res.clearCookie('authCookie'); 
     res.redirect('/');
 })
+
+router.get('/resetPass/:email', userController.restartPass);
 
 
 //autenticacion de terceros con passport
