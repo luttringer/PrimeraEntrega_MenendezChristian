@@ -14,6 +14,8 @@ import cookieParser from 'cookie-parser';
 //import passport from 'passport';
 import initializeStrategies from './config/passport.config.js';
 import dictionaryRouter from './router/dictionary.router.js';
+import usersRouter from './router/users.router.js';
+
 import cors from 'cors';
 import twilio from 'twilio';
 import errorHandler from './middlewares/errorHandler.js';
@@ -104,6 +106,7 @@ if(cluster.isPrimary)
     app.use('/api/carts', cart_mRouter);
     app.use('/api/sessions', sessionRouter);
     app.use('/api/dictionary', dictionaryRouter);
+    app.use('/api/users', usersRouter);
 
     //sms example 
     app.get('/twilio', async (req,res)=>

@@ -17,7 +17,7 @@ form.addEventListener('submit', async e =>
         });
     } else {
         try {
-            const response = await fetch('/api/sessions/resetPass/' + obj.email, {method: 'GET',headers: {'Content-Type': 'application/json',},});
+            const response = await fetch('/api/users/resetPass/' + obj.email, {method: 'GET',headers: {'Content-Type': 'application/json',},});
             const result = await response.json();
 
             if (response.status === 200) 

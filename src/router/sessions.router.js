@@ -1,15 +1,15 @@
 import { Router } from "express";
 import passport from "passport";
-import auth from "../services/auth.js";
-import UserManager from "../dao/mongo/managers/userManager.js";
+//import auth from "../services/auth.js";
+//import UserManager from "../dao/mongo/managers/userManager.js";
 import jwt from "jsonwebtoken";
 import { validateJWT } from "../middlewares/jwtExtractor.js";
 import passportCall from "../middlewares/passportCall.js";
 import authorization from "../middlewares/authorization.js";
-import executePolicies from "../middlewares/executePolicies.js";
-import userController from "../controllers/user.controller.js";
+//import executePolicies from "../middlewares/executePolicies.js";
+//import userController from "../controllers/user.controller.js";
 
-const usersServices = new UserManager();
+//const usersServices = new UserManager();
 const router = Router();
 
 
@@ -84,12 +84,7 @@ router.get('/logout', async(req,res)=>
     res.redirect('/');
 })
 
-router.get('/resetPass/:email', userController.restartPass);
 
-router.get('/resetPassword', userController.renderResetPasswordPage);
-router.post('/resetPassword', userController.renderResetPasswordPage);
-
-router.get('/premium/:uid', userController.changeUserRole);
 
 //autenticacion de terceros con passport
 //github

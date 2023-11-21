@@ -3,10 +3,7 @@ import MailingService from '../services/MailingService.js';
 import auth from "../services/auth.js";
 import crypto from 'crypto';
 
-const generateResetToken = () => 
-{
-    return crypto.randomBytes(20).toString('hex');
-};
+const generateResetToken = () => {return crypto.randomBytes(20).toString('hex')};
 
 const restartPass = async (req, res) => 
 {
@@ -29,7 +26,7 @@ const restartPass = async (req, res) =>
         user.resetTokenExpiry = resetTokenExpiry;
         await user.save();
 
-        const resetLink = `http://localhost:8080/api/sessions/resetPassword?token=${resetToken}`; // Sustituye por tu dominio
+        const resetLink = `http://localhost:8080/api/users/resetPassword?token=${resetToken}`; // Sustituye por tu dominio
 
         const mailService = new MailingService();
 
