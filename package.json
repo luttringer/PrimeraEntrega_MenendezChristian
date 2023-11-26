@@ -5,7 +5,7 @@
   "main": "./src/app.js",
   "type": "module",
   "scripts": {
-    "test": "mocha test/Sessions/api/Sessions.test.js",
+    "test": "mocha test/Products/dao/Products.test.js",
     "start": "nodemon app.js"
   },
   "keywords": [],

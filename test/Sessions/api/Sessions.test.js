@@ -4,7 +4,7 @@ import supertest from 'supertest';
 const requester = supertest('http://localhost:8080'); 
 const TEST_TIMEOUT = 4000;
 
-describe('test funcional para Sessions routes', function () 
+describe('test funcional para Sessions routes', function() 
 {
     this.timeout(TEST_TIMEOUT);
     
