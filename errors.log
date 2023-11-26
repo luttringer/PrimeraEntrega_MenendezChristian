@@ -8,3 +8,7 @@
 {"level":"error","message":"[2023-11-21T16:26:26.790Z] Error: Cannot set headers after they are sent to the client"}
 {"level":"error","message":"[2023-11-21T16:26:41.839Z] Error: Cannot set headers after they are sent to the client"}
 {"level":"error","message":"[2023-11-21T16:35:35.608Z] Error: Cannot set headers after they are sent to the client"}
+{"level":"error","message":"[2023-11-26T01:01:16.113Z] Error: Missing credentials"}
+{"level":"error","message":"[2023-11-26T01:02:10.452Z] Error: Missing credentials"}
+{"level":"error","message":"[2023-11-26T01:03:15.701Z] Error: Missing credentials"}
+{"level":"error","message":"[2023-11-26T01:12:07.087Z] Error: incorrect credentials"}

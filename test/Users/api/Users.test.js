@@ -22,7 +22,6 @@ describe('test funcional para Users routes', function ()
         const emailUsr = ' ';
         const response = await requester.get(`/api/users/resetPass/${emailUsr}`);
     
-        // Verificar el estado de la respuesta
         expect(response.status).to.be.equal(404);
     });
 });
