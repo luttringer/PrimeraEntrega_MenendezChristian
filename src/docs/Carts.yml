@@ -159,3 +159,85 @@ paths:
           description: El producto fue eliminado del carrito.
         500:
           description: Error de conexión con el servidor. Revisar las variables de entorno del servidor.
+    
+    put:
+      summary: Actualiza cantidad de producto unico de carrito dado pid, cid y nueva amount
+      description: |
+        - Este endpoint recibe por params (cid) el id unico de carrito, el pid especifico de un producto ya existente en el y su nueva cantidad.
+        
+        - Se comunica con metodo `cartsService.updateProductQuantity` pasando cid, pid y nueva cantidad.
+
+        - Si existe quantity del producto, la suma a la existente mas la nueva sino le carga la nueva quantity
+      tags: 
+        - Carts
+      parameters:
+        - in: path
+          name: req.params.cid
+          type: string
+          required: true
+          description: ID único de carrito.
+
+        - in: path
+          name: req.params.pid
+          type: string
+          required: true
+          description: id unico de producto.
+        
+        - in: path
+          name: req.body.quantity
+          type: number
+          required: true
+          description: cantidad de producto.
+      responses:
+        200:
+          description: Se actualizo la cantidad del producto en el carrito.
+        500:
+          description: Error de conexión con el servidor. Revisar las variables de entorno del servidor.
+  
+  /{cid}:
+    put:
+      summary: Actualiza carrito por id carrito unico
+      description: |
+        - Este endpoint recibe por params (cid) el id unico de carrito y un array con sus nuevos productos, actualiza sus productos por el array recibido reescribiendolos (y reemplazandolos).
+        
+        - Se comunica con metodo `cartsService.updateCartWithProducts` pasando cid y array productos.
+
+        - Este endpoint recibe como error desde metodo updateCartWithProducts de cartDao el mensaje "No se encontró el carrito con ID ${cartId}" si no existe carrito
+      tags: 
+        - Carts
+      parameters:
+        - in: path
+          name: req.params.cid
+          type: string
+          required: true
+          description: ID único de carrito.
+
+        - in: path
+          name: req.body.products
+          type: array
+          required: true
+          description: array de productos.
+      responses:
+        200:
+          description: Carrito actualizado con nuevos productos.
+        500:
+          description: Error de conexión con el servidor. Revisar las variables de entorno del servidor.
+
+    delete:
+      summary: Vacia prodcutos de carrito dado su id (carrito)
+      description: Este endpoint recibe por params (cid) y elimina completamente sus registros de productos
+      tags: 
+        - Carts
+      parameters:
+        - in: path
+          name: req.params.cid
+          type: string
+          required: true
+          description: ID único de carrito.
+      responses:
+        200:
+          description: Productos de carrito vaciados satisfactoriamente.
+        500:
+          description: Error de conexión con el servidor. Revisar las variables de entorno del servidor.
+
+    
