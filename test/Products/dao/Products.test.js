@@ -72,7 +72,8 @@ describe('test unitario para DAO de Product', function()
         assert.strictEqual(result.title, updatedProduct.title);
     });
 
-    it('debería eliminar un producto correctamente', async function () {
+    it('debería eliminar un producto correctamente', async function () 
+    {
         const productId = idProduct;
         const product = new ProductDao();
         const result = await product.deleteProduct(productId);

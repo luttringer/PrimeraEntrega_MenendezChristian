@@ -21,6 +21,9 @@ import twilio from 'twilio';
 import errorHandler from './middlewares/errorHandler.js';
 import attachLogger from './middlewares/attachLogger.js';
 
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUIExpress from 'swagger-ui-express';
+
 import cluster from 'cluster';
 import os from 'os';
 
@@ -46,6 +49,20 @@ if(cluster.isPrimary)
     const ENVPORT =  config.PORT;
     const COOKIEPARSER =   config.COOKIEPARSER;
 
+    //configuracion de swagger
+    const swaggerSpecOptions = 
+    {
+        definition:
+        {
+            openapi:'3.0.1',
+            info: 
+            {
+                title: 'e-commerce wine uruguay',
+                description: 'e-commerce en base a una bodega online.'
+            }
+        },
+        apis: [`${__dirname}/docs`]
+    } 
 
     //twilio config init
     const twilioClient = twilio(config.TWILIO_SID, config.TWILIO_AUTH_TOKEN);
