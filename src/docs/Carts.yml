@@ -130,3 +130,32 @@ paths:
             - No se encontro el carrito. Puede ser que el usuario intento comprar el carrito sin antes haber registrado producto alguno o consultado carrito (se genera bajo demanda).
         500:
           description: Error de conexión con el servidor. Revisar las variables de entorno del servidor.
+
+  /{cid}/products/{pid}:
+    delete:
+      summary: Elimina producto unico (pid) de carrito unico (cid)
+      description: |
+        - Este endpoint recibe por params cid (id carrito) y pid (id producto)
+        
+        - Se comunica con metodo `cartsService.removeProductFromCart` pasando ambos params y elimina producto del carrito.
+
+        - Este endpoint recibe como error desde metodo removeProductFromCart de cartDao el mensaje "No se encontró el carrito con ID ${cartId}" si no existe carrito
+      tags: 
+        - Carts
+      parameters:
+        - in: path
+          name: req.params.cid
+          type: string
+          required: true
+          description: ID único de carrito.
+
+        - in: path
+          name: req.params.pid
+          type: string
+          required: true
+          description: ID único de producto.
+      responses:
+        200:
+          description: El producto fue eliminado del carrito.
+        500:
+          description: Error de conexión con el servidor. Revisar las variables de entorno del servidor.
