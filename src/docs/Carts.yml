@@ -61,7 +61,7 @@ paths:
         - Se comunica con el método `updateCartProducts` para agregar el producto, si el carrito no existe lo crea y agrega el producto, si ya existe directamente lo agrega.
         
         - En caso de intentar agregar un producto que ya existe en el carrito, se aumenta su amount en +1
-        
+
         - Este endpoint es invocado al darle click al boton "agregar a carrito" de cada producto de la hbs vista Products.
       tags: 
         - Carts
@@ -82,5 +82,51 @@ paths:
           description: El producto se agrego satisfactoriamente al carrito unico. devuleve en .send "Producto actualizado en el carrito").
         400:
           description: El usuario que esta intentando agregar un producto es de rol premium, y el producto que intenta agregar es de su propiedad (owner).
+        500:
+          description: Error de conexión con el servidor. Revisar las variables de entorno del servidor.
+  
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Compra carrito (todos sus productos) por CID
+      description: |
+        - Este endpoint recibe por req.user, req.params.cid y req.body.sumTotalPrice y  efectua compra de carrito sobre usuario unico
+        
+        - Se comunica con el método `purchaseCart` para comprar el carrito.
+        
+        - Se asegura de que exista carrito a comprar (el usuario puede intentar comprar un carrito sin que se haya creado antes, se crea en demanda de querer o bien ver su carrito o bien cargar productos en el)
+        
+        - Se asegura de que el amount por producto del carrito sea menor al stock en la bd mongo de cada producto de por si.
+
+        - De efectuarse la compra del carrito, genera un ticket guardando el id user, id carrito y precio total de los productos
+
+        - Una vez se efectua la compra vacia el array de products del carrito en cuestion y updatea la quantity de cada producto involucrado en la bd
+      tags: 
+        - Carts
+      parameters:
+        - in: path
+          name: req.user.id
+          type: string
+          required: true
+          description: ID único de usuario.
+
+        - in: path
+          name: req.params.cid
+          type: string
+          required: true
+          description: ID único de carrito.
+        
+        - in: path
+          name: req.body.sumTotalPrice
+          type: number
+          required: true
+          description: suma del total de productos por su amount (costo total de compra).
+      responses:
+        200:
+          description: El carrito se compro exitosamente, se vacia carrito, actualiza quantity de productos comprados en bd y genera ticket.
+        404:
+          description: |
+            - Uno de los productos en carrito no se encontro en la bd. Puede ser que a momento de agregarlo a carrito existia pero luego se dio de baja.
+            
+            - No se encontro el carrito. Puede ser que el usuario intento comprar el carrito sin antes haber registrado producto alguno o consultado carrito (se genera bajo demanda).
         500:
           description: Error de conexión con el servidor. Revisar las variables de entorno del servidor.
