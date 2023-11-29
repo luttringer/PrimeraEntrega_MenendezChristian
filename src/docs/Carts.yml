@@ -1,20 +1,86 @@
-paths:  
-  /api/carts: 
+swagger: '2.0'
+info:
+  title: 'API de Carritos'
+  version: '1.0.0'
+basePath: '/api'
+schemes:
+  - 'https'
+paths:
+  /api/carts/{cid}:
     get:
-      summary: Devuelve informacion sobre el carrito del _id indicado en el endpoint.
+      summary: Obtener detalles del carrito por ID
+      description: |
+        - Este endpoint devuelve los detalles de un carrito específico basado en su ID y renderiza la vista `Carts`.
+        
+        - Se comunica con el método `getCart` del controlador `carts.controller`.
       tags:
         - Carts
+      parameters:
+        - in: path
+          name: req.param.cid
+          type: string
+          required: true
+          description: ID único del carrito.
       responses:
-        "200": 
-          description: Los videojuegos se encontraron super bien.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    description: indica el estado de la peticion
+        200:
+          description: Renderiza la vista `Carts` con los detalles del carrito.
+        400:
+          description: No se encontró ningún carrito con el ID indicado.
+        500:
+          description: Error de conexión con el servidor. Revisar las variables de entorno del servidor.
 
-        "500": 
-          description: Error del servidor.
+  /api/carts:
+    post:
+      summary: Crea un carrito único (a id user)
+      description: |
+        - Este endpoint es invocado desde la vista `Profile` cuando se hace clic en "carrito" de un producto.
+        
+        - Se comunica con el método `createCartByUserId` para crear un carrito asociado al ID de usuario proporcionado por el token del user logeado.
+        
+        - Una vez creado el carrito, redirecciona al endpoint `/api/carts/{cid}`.
+      tags: 
+        - Carts
+      parameters:
+        - in: query
+          name: req.user.id
+          type: string
+          required: true
+          description: ID único de usuario.
+      responses:
+        200:
+          description: Redirecciona al endpoint `/api/carts/{cid}`. Si el carrito ya existe, también se redirecciona.
+        500:
+          description: Error de conexión con el servidor. Revisar las variables de entorno del servidor.
+  
+  /api/carts/addProductToCart:
+    post:
+      summary: Agrega un producto a carrito dado user id
+      description: |
+        - Este endpoint recibe por req.user y req.body id usuario e id producto, y agrega el producto al carrito unico del user
+        
+        - Se comunica con el método `updateCartProducts` para agregar el producto, si el carrito no existe lo crea y agrega el producto, si ya existe directamente lo agrega.
+        
+        - En caso de intentar agregar un producto que ya existe en el carrito, se aumenta su amount en +1
+        
+        - Este endpoint es invocado al darle click al boton "agregar a carrito" de cada producto de la hbs vista Products.
+      tags: 
+        - Carts
+      parameters:
+        - in: path
+          name: req.user.id
+          type: string
+          required: true
+          description: ID único de usuario.
+
+        - in: path
+          name: req.body.productId
+          type: string
+          required: true
+          description: ID único de producto.
+      responses:
+        200:
+          description: El producto se agrego satisfactoriamente al carrito unico. devuleve en .send "Producto actualizado en el carrito").
+        400:
+          description: El usuario que esta intentando agregar un producto es de rol premium, y el producto que intenta agregar es de su propiedad (owner).
+        500:
+          description: Error de conexión con el servidor. Revisar las variables de entorno del servidor.
