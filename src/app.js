@@ -58,11 +58,14 @@ if(cluster.isPrimary)
             info: 
             {
                 title: 'e-commerce wine uruguay',
-                description: 'e-commerce en base a una bodega online.'
+                description: 'e-commerce en base a una tienda online de vinos.'
             }
         },
-        apis: [`${__dirname}/docs`]
-    } 
+        apis: [`${__dirname}/docs/**/*.yml`]
+    }
+
+    const swaggerSpec = swaggerJSDoc(swaggerSpecOptions);
+    
 
     //twilio config init
     const twilioClient = twilio(config.TWILIO_SID, config.TWILIO_AUTH_TOKEN);
@@ -93,7 +96,7 @@ if(cluster.isPrimary)
             }
         }
     });
-
+    
     hbs.allowProtoPropertiesByDefault = true;
 
 
@@ -111,6 +114,7 @@ if(cluster.isPrimary)
     app.use(express.static((`${__dirname}/public`)));
     app.use(cookieParser(COOKIEPARSER));
     app.use(errorHandler);
+    
 
 
 
@@ -124,6 +128,8 @@ if(cluster.isPrimary)
     app.use('/api/sessions', sessionRouter);
     app.use('/api/dictionary', dictionaryRouter);
     app.use('/api/users', usersRouter);
+    app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(swaggerSpec));
+    
 
     //sms example 
     app.get('/twilio', async (req,res)=>

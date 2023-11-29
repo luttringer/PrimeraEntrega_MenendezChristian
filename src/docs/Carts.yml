@@ -1,0 +1,20 @@
+paths:  
+  /api/carts: 
+    get:
+      summary: Devuelve informacion sobre el carrito del _id indicado en el endpoint.
+      tags:
+        - Carts
+      responses:
+        "200": 
+          description: Los videojuegos se encontraron super bien.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: indica el estado de la peticion
+
+        "500": 
+          description: Error del servidor.
