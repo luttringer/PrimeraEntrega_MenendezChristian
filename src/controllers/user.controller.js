@@ -95,7 +95,7 @@ const changeUserRole = async (req, res) =>
         const userId = req.params.uid;
         const updatedUser = await userService.changeUserRole(userId);
   
-        if (!updatedUser) return res.status(404).json({ message: 'Usuario no encontrado' });
+        if (!updatedUser) return res.status(404).json({ message: 'Usuario no encontrado o sin documentos requeridos cargados' });
         return res.status(200).json({ message: 'Rol de usuario actualizado exitosamente', user: updatedUser });
     } catch (error) 
     {

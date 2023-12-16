@@ -35,19 +35,29 @@ export default class UserManager
 
     changeUserRole = async (userId) => 
     {
-        try 
-        {
-          const user = await userModel.findById(userId);
-      
-          if (!user) return null;
-      
-          user.role = user.role === 'user' ? 'premium' : 'user';
-          const updatedUser = await user.save();
-          return updatedUser;
-        } catch (error) 
-        {
-          console.error(error);
-          throw error;
+        try {
+            const user = await userModel.findById(userId);
+    
+            if (!user) return null;
+    
+            // Verifica si el usuario tiene todos los documentos requeridos
+            const requiredDocuments = ['Identificacion.txt', 'Comprobante de domicilio.txt', 'Comprobante de estado de cuenta.txt'];
+            const hasAllDocuments = requiredDocuments.every(doc => {
+                return user.documents.some(userDoc => userDoc.name === doc);
+            });
+    
+            if (!hasAllDocuments) {
+                console.log("llego aca");
+                return null;
+            }
+    
+            // Actualiza el rol solo si tiene todos los documentos
+            user.role = user.role === 'user' ? 'premium' : 'user';
+            const updatedUser = await user.save();
+            return updatedUser;
+        } catch (error) {
+            console.error(error);
+            throw error;
         }
     };
 
