@@ -6,6 +6,7 @@ import auth from "../services/auth.js";
 import { Strategy,ExtractJwt } from 'passport-jwt';
 import { cookieExtractor } from "../utils.js";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { userService } from "../services/index.js";
 
 
 const LocalStrategy = local.Strategy; //local = user + pass
@@ -33,6 +34,10 @@ const initializeStrategies = ()=>
         if(!user) return done(null,false, {message: "incorrect credentials "})
         const isValidPassword = await auth.validatePassword(password, user.password);
         if(!isValidPassword) return done(null,false, {message: "incorrect credentials"})
+        
+        // Actualiza last_connection usando userService
+        await userService.updateLastConnection(user._id);
+
         done(null,user);
     }));
 

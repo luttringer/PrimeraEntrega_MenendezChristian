@@ -37,7 +37,7 @@ router.post('/register', async(req,res)=>
 })
 
 router.post('/login', (req, res) => {
-    passport.authenticate('login', (error, user, info) => 
+    passport.authenticate('login', async(error, user, info) => 
     {
         if (error)
         {

@@ -29,4 +29,9 @@ export default class UserRepository
     {
         return this.dao.updateUser(userId, update);
     }
+
+    updateLastConnection = (userId)=>
+    {
+        return this.dao.updateLastConnection(userId);
+    }
 }

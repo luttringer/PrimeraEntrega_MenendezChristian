@@ -79,6 +79,21 @@ export default class UserManager
             throw error;
         }
     }
+
+    updateLastConnection = async(userId)=>
+    {
+        try 
+        {
+          const user = await userModel.findById(userId);
     
+          if (user) {
+            user.last_connection = new Date();
+            await user.save();
+          }
+        } catch (error) {
+          // Maneja el error
+          console.error(error);
+        }
+      }
 
 }
