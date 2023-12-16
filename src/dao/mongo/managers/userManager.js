@@ -33,24 +33,23 @@ export default class UserManager
         return userModel.findOne({ resetToken: token });
     }
 
-    changeUserRole = async (userId) => 
-    {
+    changeUserRole = async (userId) => {
         try {
             const user = await userModel.findById(userId);
-    
+        
             if (!user) return null;
-    
+        
             // Verifica si el usuario tiene todos los documentos requeridos
-            const requiredDocuments = ['Identificacion.txt', 'Comprobante de domicilio.txt', 'Comprobante de estado de cuenta.txt'];
-            const hasAllDocuments = requiredDocuments.every(doc => {
-                return user.documents.some(userDoc => userDoc.name === doc);
+            const requiredDocumentNames = ['Identificacion', 'Comprobante de domicilio', 'Comprobante de estado de cuenta'];
+            const hasAllDocuments = requiredDocumentNames.every(docName => {
+                return user.documents.some(userDoc => userDoc.name.includes(docName));
             });
-    
+        
             if (!hasAllDocuments) {
                 console.log("llego aca");
                 return null;
             }
-    
+        
             // Actualiza el rol solo si tiene todos los documentos
             user.role = user.role === 'user' ? 'premium' : 'user';
             const updatedUser = await user.save();
@@ -60,6 +59,7 @@ export default class UserManager
             throw error;
         }
     };
+    
 
     getUserById = async (userId) => 
     {
