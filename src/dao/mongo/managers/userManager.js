@@ -62,5 +62,23 @@ export default class UserManager
             throw error;
         }
     }
-      
+    
+    updateUser = async (userId, updates) => {
+        try {
+            const user = await userModel.findById(userId);
+    
+            if (!user) return null;
+            if (!Array.isArray(user.documents)) {user.documents = [];}
+
+            user.documents.push(...updates);
+            const updatedUser = await user.save();
+    
+            return updatedUser;
+        } catch (error) {
+            console.error('Error al actualizar el usuario:', error.message);
+            throw error;
+        }
+    }
+    
+
 }

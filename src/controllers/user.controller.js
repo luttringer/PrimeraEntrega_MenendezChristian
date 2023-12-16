@@ -2,6 +2,7 @@ import { userService } from "../services/index.js";
 import MailingService from '../services/MailingService.js';
 import auth from "../services/auth.js";
 import crypto from 'crypto';
+import mongoose, { Types } from 'mongoose';
 
 const generateResetToken = () => {return crypto.randomBytes(20).toString('hex')};
 
@@ -103,51 +104,31 @@ const changeUserRole = async (req, res) =>
     }
 };
 
-const documents = async (req, res) => {
-    try {
-      const { uid } = req.params;
-      const { document, profileImage, productImage } = req.files;
-  
-      if (!document && !profileImage && !productImage) {
-        return res.status(400).json({ error: 'No se recibieron documentos' });
-      }
-  
-      const user = await userService.getUserByEmail({ _id: uid });
-  
-      if (!user) {
-        return res.status(404).json({ error: 'Usuario no encontrado' });
-      }
-  
-      // Actualizar el estado del usuario para indicar que ha subido documentos
-      if (document) {
-        user.documents.push({
-          name: document[0].originalname,
-          reference: document[0].path,
+const updateDocumentsRegister = async (req, res) => 
+{
+    try 
+    {
+        const uid = req.params.uid;
+        let arr_updates = [];
+
+        req.files.forEach(file => 
+        {
+            if (file.originalname && file.filename) 
+            {
+                arr_updates.push({
+                    name: file.filename,
+                    reference: file.originalname
+                });
+            }
         });
-      }
-      if (profileImage) {
-        user.documents.push({
-          name: profileImage[0].originalname,
-          reference: profileImage[0].path,
-        });
-      }
-      if (productImage) {
-        user.documents.push({
-          name: productImage[0].originalname,
-          reference: productImage[0].path,
-        });
-      }
-  
-      await user.save();
-  
-      res.status(200).json({ message: 'Documentos subidos exitosamente', user });
+
+        const updatedUser = await userService.updateUser(uid, arr_updates);
+        res.status(200).send("Documentos subidos exitosamente");
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Error interno del servidor' });
+        console.error('Error al actualizar el registro de documentos:', error.message);
+        res.status(500).json({ error: 'Error interno del servidor', message: error.message });
     }
-  };
-  
-  
+};
 
 const renderFormDocuments = async (req,res) => 
 {
@@ -161,6 +142,6 @@ export default
     restartPass,
     renderResetPasswordPage, 
     changeUserRole,
-    documents,
-    renderFormDocuments
+    renderFormDocuments,
+    updateDocumentsRegister
 }

@@ -24,4 +24,9 @@ export default class UserRepository
     {
         return this.dao.changeUserRole(userId);
     }
+
+    updateUser = (userId, update) =>
+    {
+        return this.dao.updateUser(userId, update);
+    }
 }

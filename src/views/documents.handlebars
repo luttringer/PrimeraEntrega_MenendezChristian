@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="/css/documents.css">
 
 <section class="cont_documents">
-    <form action="/api/users/{{userId}}/documents" method="POST" enctype="multipart/form-data" >
+    <form id="documentForm" action="/api/users/{{userId}}/documents" method="POST" enctype="multipart/form-data" >
         <h1>cargar documentos</h1>
         <label for="document">documento...</label>
         <input type="file" name="document" id="document">
@@ -15,8 +15,49 @@
         <input type="file" name="productImage" id="productImage" accept="image/*">
         <br>
         
-        <button type="submit">enviar documentos</button>
+        <button type="button" onclick="submitForm()">enviar documentos</button>
     </form>
 </section>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+        async function submitForm() {
+            try {
+                const form = document.getElementById('documentForm');
+                const formData = new FormData(form);
+
+                const response = await fetch(form.action, {
+                    method: form.method,
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const result = await response.text();
+
+                    if (result === "Documentos subidos exitosamente") {
+                        Swal.fire({
+                            icon: 'success',
+                            title: '¡Éxito!',
+                            text: 'Documentos subidos exitosamente',
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Hubo un problema al subir los documentos',
+                        });
+                    }
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Hubo un problema al subir los documentos',
+                    });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+    </script>
 
