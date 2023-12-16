@@ -6,6 +6,7 @@ import jwt from "jsonwebtoken";
 import { validateJWT } from "../middlewares/jwtExtractor.js";
 import passportCall from "../middlewares/passportCall.js";
 import authorization from "../middlewares/authorization.js";
+import { userService } from "../services/index.js";
 //import executePolicies from "../middlewares/executePolicies.js";
 //import userController from "../controllers/user.controller.js";
 
@@ -76,8 +77,9 @@ router.get('/profileInfo',validateJWT, async(req,res)=>
     res.send({status:'success', payload:req.user})
 })
 
-router.get('/logout', async(req,res)=>
+router.get('/logout',passportCall('jwt'), async(req,res)=>
 {
+    await userService.updateLastConnection(req.user.id);
     //elimino jwt token y redirecciono.
     req.logger.info(`[${new Date().toISOString()}] Logout exitoso`);
     res.clearCookie('authCookie'); 
