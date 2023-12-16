@@ -12,6 +12,7 @@
     <a href="/products"><button>tienda</button></a>
     <form action="/api/carts" method="POST"><button type="submit">carrito</button></form>
     <a href=""><button>mensajes (disabled)</button></a>
+    <a href="/api/users/{{user.id}}/loadDocuments"><button>cargar documentos</button></a>
 
     <a onclick="logout_redirect_fn();"><button>logout</button></a>
 </section>

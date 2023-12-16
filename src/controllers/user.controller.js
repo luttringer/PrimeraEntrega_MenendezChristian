@@ -103,9 +103,53 @@ const changeUserRole = async (req, res) =>
     }
 };
 
+const documents = async (req, res) => 
+{
+    try 
+    {
+        const { uid } = req.params;
+        const { files } = req;
+  
+        if(!files || files.length === 0) 
+        {
+            return res.status(400).json({ error: 'No se recibieron documentos' });
+        }
+  
+        const user = await userModel.findById(uid);
+  
+        if(!user) 
+        {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+  
+        // Actualizar el estado del usuario para indicar que ha subido documentos
+        user.documents = [...user.documents, ...files.map(file => ({
+            name: file.originalname,
+            reference: file.path,
+        }))];
+  
+        await user.save();
+  
+        res.status(200).json({ message: 'Documentos subidos exitosamente', user });
+    } catch (error) 
+    {
+        console.error(error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+const renderFormDocuments = async (req,res) => 
+{
+    const userId = req.params.uid;
+    res.render('documents', { userId });
+}
+  
+
 export default 
 {
     restartPass,
     renderResetPasswordPage, 
-    changeUserRole
+    changeUserRole,
+    documents,
+    renderFormDocuments
 }

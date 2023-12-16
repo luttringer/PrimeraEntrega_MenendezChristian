@@ -20,6 +20,7 @@ import cors from 'cors';
 import twilio from 'twilio';
 import errorHandler from './middlewares/errorHandler.js';
 import attachLogger from './middlewares/attachLogger.js';
+import multerMiddleware  from './middlewares/multer.js';
 
 import swaggerJSDoc from 'swagger-jsdoc';
 import swaggerUIExpress from 'swagger-ui-express';
@@ -114,6 +115,8 @@ if(cluster.isPrimary)
     app.use(express.static((`${__dirname}/public`)));
     app.use(cookieParser(COOKIEPARSER));
     app.use(errorHandler);
+    app.use(multerMiddleware);
+    
     
 
 

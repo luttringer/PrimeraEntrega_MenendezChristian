@@ -1,0 +1,22 @@
+<link rel="stylesheet" href="/css/documents.css">
+
+<section class="cont_documents">
+    <form action="/api/users/{{userId}}/documents" method="POST" enctype="multipart/form-data">
+        <h1>cargar documentos</h1>
+        <label for="document">documento...</label>
+        <input type="file" name="document" id="document">
+        <br>
+        
+        <label for="profileImage">imágen de perfil...</label>
+        <input type="file" name="profileImage" id="profileImage" accept="image/*">
+        <br>
+        
+        <label for="productImage">imágen de producto...</label>
+        <input type="file" name="productImage" id="productImage" accept="image/*">
+        <br>
+        
+        <button type="submit">enviar documentos</button>
+    </form>
+</section>
+
+
