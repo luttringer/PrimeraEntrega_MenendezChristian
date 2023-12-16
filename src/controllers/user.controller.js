@@ -103,40 +103,51 @@ const changeUserRole = async (req, res) =>
     }
 };
 
-const documents = async (req, res) => 
-{
-    try 
-    {
-        const { uid } = req.params;
-        const { files } = req;
+const documents = async (req, res) => {
+    try {
+      const { uid } = req.params;
+      const { document, profileImage, productImage } = req.files;
   
-        if(!files || files.length === 0) 
-        {
-            return res.status(400).json({ error: 'No se recibieron documentos' });
-        }
+      if (!document && !profileImage && !productImage) {
+        return res.status(400).json({ error: 'No se recibieron documentos' });
+      }
   
-        const user = await userModel.findById(uid);
+      const user = await userService.getUserByEmail({ _id: uid });
   
-        if(!user) 
-        {
-            return res.status(404).json({ error: 'Usuario no encontrado' });
-        }
+      if (!user) {
+        return res.status(404).json({ error: 'Usuario no encontrado' });
+      }
   
-        // Actualizar el estado del usuario para indicar que ha subido documentos
-        user.documents = [...user.documents, ...files.map(file => ({
-            name: file.originalname,
-            reference: file.path,
-        }))];
+      // Actualizar el estado del usuario para indicar que ha subido documentos
+      if (document) {
+        user.documents.push({
+          name: document[0].originalname,
+          reference: document[0].path,
+        });
+      }
+      if (profileImage) {
+        user.documents.push({
+          name: profileImage[0].originalname,
+          reference: profileImage[0].path,
+        });
+      }
+      if (productImage) {
+        user.documents.push({
+          name: productImage[0].originalname,
+          reference: productImage[0].path,
+        });
+      }
   
-        await user.save();
+      await user.save();
   
-        res.status(200).json({ message: 'Documentos subidos exitosamente', user });
-    } catch (error) 
-    {
-        console.error(error);
-        res.status(500).json({ error: 'Error interno del servidor' });
+      res.status(200).json({ message: 'Documentos subidos exitosamente', user });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Error interno del servidor' });
     }
-};
+  };
+  
+  
 
 const renderFormDocuments = async (req,res) => 
 {

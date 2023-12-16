@@ -1,40 +1,60 @@
 import multer from 'multer';
-import path from 'path';
+import { promises as fsPromises } from 'fs';
+import __dirname from "../utils.js"; 
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const { uid } = req.params;
-    const fileType = file.mimetype.split('/')[0];
+  destination: async (req, file, cb) => {
+    const uid = extractUidFromUrl(req.url);
+    const fieldName = file.fieldname.toLowerCase();
 
-    if (fileType === 'image') {
-      cb(null, path.join(__dirname, '../uploads/profiles', uid));
-    } else if (fileType === 'application') {
-      cb(null, path.join(__dirname, '../uploads/documents', uid));
+    let uploadPath = '';
+
+    if (fieldName.includes('profileimage')) {
+      uploadPath = `${__dirname}/uploads/profiles/${uid}`;
+    } else if (fieldName.includes('document')) {
+      uploadPath = `${__dirname}/uploads/documents/${uid}`;
     } else {
-      cb(null, path.join(__dirname, '../uploads/products', uid));
+      uploadPath = `${__dirname}/uploads/products/${uid}`;
     }
+
+    try {
+      await fsPromises.mkdir(uploadPath, { recursive: true });
+    } catch (err) {
+      console.error('Error al crear la carpeta:', err.message);
+    }
+
+    cb(null, uploadPath);
   },
   filename: (req, file, cb) => {
     cb(null, file.originalname);
   },
 });
 
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
 
-// Middleware envuelto en una función con la firma (req, res, next)
-const multerMiddleware = (req, res, next) => 
-{
-  // `upload.single('nombreDelCampo')` para procesar un solo archivo
-  upload.single('nombreDelCampo')(req, res, err => 
-  {
-    if (err) 
-    {
-      // Manejo de errores, si es necesario
-      return res.status(400).json({ error: 'Error al subir el archivo' });
+const multerMiddleware = (req, res, next) => {
+  upload.any()(req, res, (err) => {
+    if (err) {
+      if (err.code === 'LIMIT_UNEXPECTED_FILE' || err.message === "Unexpected end of form") 
+      {
+        return next();
+      }
+      return res.status(500).json({ error: 'Error interno del servidor', message: err.message });
     }
-    // Continuar con el siguiente middleware
+
     next();
   });
+};
+
+const extractUidFromUrl = (url) => 
+{
+  const regex = /\/users\/([^\/]+)\/documents/i;
+  const match = url.match(regex);
+
+  return match ? match[1] : null;
 };
 
 export default multerMiddleware;
