@@ -4,8 +4,6 @@ import uploader from "../services/uploadServices.js";
 import authorization from "../middlewares/authorization.js";
 import productsController from "../controllers/products.controller.js";
 import { generateProducts } from "../mocks/products.js";
-import { validateJWT } from "../middlewares/jwtExtractor.js";
-import passportCall from "../middlewares/passportCall.js";
 
 const router = Router();
 const productsService = new ProductManager();                                  
