@@ -51,7 +51,7 @@ router.put('/:pid', authorization(['admin']), async(req, res)=>{
     res.send({status:"success"});
 });
 
-router.get('/:pid', authorization(['superadmin']), async(req, res)=>{  
+router.get('/:pid', authorization(['admin', 'superadmin']), async(req, res)=>{  
     const {pid} = req.params;
     const result = await productsService.deleteProduct(pid);
     req.logger.info(`[${new Date().toISOString()}] Poducto eliminado con exito`);

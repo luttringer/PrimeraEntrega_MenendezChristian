@@ -12,10 +12,10 @@ router.get('/premium/:uid', userController.changeUserRole);
 router.post('/:uid/documents', userController.updateDocumentsRegister);
 router.post('/:uid/documents', multerMiddleware, async (req, res) => {res.status(200).send("Documentos subidos exitosamente");});
 router.get('/:uid/loadDocuments', userController.renderFormDocuments);
-router.get('/usersGest', userController.renderGestUsers);
-router.get('/', userController.allUsers);
-router.delete('/', userController.allUsers);
-router.post('/delete/:email', userController.deleteUser);
-router.post('/changeRole/:uid', userController.changeRole);
+router.get('/usersGest', authorization(['admin', 'superadmin']), userController.renderGestUsers);
+router.get('/', authorization(['admin', 'superadmin']), userController.allUsers);
+router.delete('/', authorization(['admin', 'superadmin']), userController.allUsers);
+router.post('/delete/:email', authorization(['admin', 'superadmin']), userController.deleteUser);
+router.post('/changeRole/:uid', authorization(['admin', 'superadmin']), userController.changeRole);
 
 export default router;
