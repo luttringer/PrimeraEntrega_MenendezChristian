@@ -4,6 +4,8 @@ import uploader from "../services/uploadServices.js";
 import authorization from "../middlewares/authorization.js";
 import productsController from "../controllers/products.controller.js";
 import { generateProducts } from "../mocks/products.js";
+import { validateJWT } from "../middlewares/jwtExtractor.js";
+import passportCall from "../middlewares/passportCall.js";
 
 const router = Router();
 const productsService = new ProductManager();                                  
@@ -51,7 +53,7 @@ router.put('/:pid', authorization(['admin']), async(req, res)=>{
     res.send({status:"success"});
 });
 
-router.delete('/:pid', authorization(['admin']), async(req, res)=>{  
+router.get('/:pid', authorization(['superadmin']), async(req, res)=>{  
     const {pid} = req.params;
     const result = await productsService.deleteProduct(pid);
     req.logger.info(`[${new Date().toISOString()}] Poducto eliminado con exito`);

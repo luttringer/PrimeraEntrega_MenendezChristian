@@ -1,4 +1,5 @@
 import productsModel from "../models/products.js";          //desarrollo un mmanager para no interactuar directamente con el modelo
+import MailingService from '../../../services/MailingService.js';
 
 export default class ProductDao
 {
@@ -94,21 +95,50 @@ export default class ProductDao
             throw error;
         }
     }
-    
 
-    deleteProduct = async (id) => 
-    {
+    getProductOwnerEmail = async (id) => {
         try {
+            const product = await productsModel.findById(id);
+
+            if (!product) {
+                throw new Error(`No se encontró el producto con ID ${id}`);
+            }
+
+            return product.owner;
+        } catch (error) {
+            throw error;
+        }
+    };
+
+    deleteProduct = async (id) => {
+        try {
+            const ownerEmail = await this.getProductOwnerEmail(id);
+    
             const deletedProduct = await productsModel.deleteOne({ _id: id });
     
             if (deletedProduct.deletedCount === 0) {
                 throw new Error(`No se encontró el producto con ID ${id}`);
             }
     
+            const mailService = new MailingService();
+            const mailRequest = 
+            {
+                from: 'e-commerce wine uruguay',
+                to: ownerEmail,
+                subject: 'su producto ha sido eliminado',
+                html:
+                `
+                    <p>Usted está formalmente notificado, por este medio, de que uno de sus productos registrados ha sido eliminado de nuestra plataforma e-commerce WineUruguay.<br>Atte. equipo WineUruguay</p>
+                 `
+            }
+            const mailResult = await mailService.sendMail(mailRequest);
+    
             return { status: true }; // Puedes devolver cualquier indicador de éxito
         } catch (error) {
             throw error;
         }
-    }
+    };
+
     
+
 }
