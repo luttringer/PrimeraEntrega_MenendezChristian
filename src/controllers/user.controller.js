@@ -135,6 +135,42 @@ const renderFormDocuments = async (req,res) =>
     const userId = req.params.uid;
     res.render('documents', { userId });
 }
+
+const allUsers = async (req, res) => 
+{
+    try 
+    {
+        const allUsersInfo = await userService.getAllUsersInfo();
+        if (req.method === 'GET') res.status(200).send(allUsersInfo);
+        else if(req.method === 'DELETE')
+        {
+            const inactiveUsers = allUsersInfo.filter(user => 
+            {
+                const lastConnectionDate = new Date(user.last_connection);
+                const twoDaysAgo = new Date();
+                twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
+                return !user.last_connection || lastConnectionDate < twoDaysAgo;
+            });
+
+            if (inactiveUsers.length > 0) 
+            {
+                await Promise.all(
+                    inactiveUsers.map(async (user) => 
+                    {
+                        await userService.sendDeletionNotification(user.email);
+                        await userService.deleteUserByEmail(user.email);
+                    })
+                );
+            }
+
+            res.status(200).send('Usuarios borrados satisfactoriamente');
+        }
+        
+    } catch (error) 
+    {
+        res.status(500).send('Error interno del servidor');
+    }
+};
   
 
 export default 
@@ -143,5 +179,6 @@ export default
     renderResetPasswordPage, 
     changeUserRole,
     renderFormDocuments,
-    updateDocumentsRegister
+    updateDocumentsRegister,
+    allUsers
 }

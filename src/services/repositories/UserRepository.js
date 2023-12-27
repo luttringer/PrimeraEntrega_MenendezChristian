@@ -34,4 +34,24 @@ export default class UserRepository
     {
         return this.dao.updateLastConnection(userId);
     }
+
+    getAllUsersInfo = ()=> 
+    {
+        return this.dao.getAllUsersInfo();
+    }
+
+    deleteInactiveUsers = ()=> 
+    {
+        return this.dao.deleteInactiveUsers();
+    }
+
+    sendDeletionNotification = (email)=> 
+    {
+        return this.dao.sendDeletionNotification(email);
+    }
+
+    deleteUserByEmail = (email)=> 
+    {
+        return this.dao.deleteUserByEmail(email);
+    }
 }
