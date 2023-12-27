@@ -1,0 +1,130 @@
+<link rel="stylesheet" href="/css/gestUsers.css">
+
+<a href="{{baseUrl}}/register"><button>Registrar usuario</button></a>
+<a href="{{baseUrl}}/"><button>Regresar a panel usuario</button></a>
+
+
+<h1>Gestión de Usuarios</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Última Conexión</th>
+                <th>Modificar rol</th>
+                <th>Eliminar usuario</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each allUsersInfo}}
+                <tr>
+                    <td>{{this._id}}</td>
+                    <td>{{this.firstName}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{this.role}}</td>
+                    <td>{{this.last_connection}}</td>
+                    
+                    <td>
+                        <form id="modifyRoleForm_{{this._id}}">
+                            <label for="roleSelect_{{this._id}}">Nuevo rol:</label>
+                            <select name="newRole" id="roleSelect_{{this._id}}">
+                                <option value="user" {{#if (eq this.role "user")}}selected{{/if}}>Usuario</option>
+                                <option value="admin" {{#if (eq this.role "admin")}}selected{{/if}}>Administrador</option>
+                                <option value="superadmin" {{#if (eq this.role "superadmin")}}selected{{/if}}>Superadministrador</option>
+                                <option value="premium" {{#if (eq this.role "premium")}}selected{{/if}}>Premium</option>
+                            </select>
+                            <button type="button" onclick="modifyRole('{{this._id}}')">Modificar</button>
+                        </form>
+                    </td>
+
+                    <td>
+                        <form id="deleteUserForm_{{this._id}}">
+                            <button type="button" onclick="deleteUser('{{this.email}}')">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function modifyRole(userId) {
+    const form = document.getElementById(`modifyRoleForm_${userId}`);
+    const roleSelect = document.getElementById(`roleSelect_${userId}`);
+    const newRole = roleSelect.value;
+
+    fetch(`/api/users/changeRole/${userId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newRole }),
+    })
+    .then(response => response.text())
+    .then(data => {
+        
+        if (data === "Rol de usuario actualizado correctamente") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Rol modificado correctamente',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+            // Recargar la página después de un tiempo
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al modificar el rol',
+                text: data.message,
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error al modificar el rol:', error.message);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error interno del servidor',
+        });
+    });
+}
+
+function deleteUser(userEmail) {
+    const form = document.getElementById(`deleteUserForm_${userEmail}`);
+
+    fetch(`/api/users/delete/${userEmail}`, {
+        method: 'POST',
+    })
+    .then(response => response.text())
+    .then(data => {
+        if (data === "Usuario borrado satisfactoriamente") {
+            Swal.fire({
+                icon: 'success',
+                title: 'Usuario eliminado correctamente',
+                showConfirmButton: false,
+                timer: 1500,
+            });
+            // Recargar la página después de un tiempo
+            setTimeout(() => location.reload(), 1500);
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al eliminar el usuario',
+                text: data.message,
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error al eliminar el usuario:', error.message);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error interno del servidor',
+        });
+    });
+}
+
+</script>

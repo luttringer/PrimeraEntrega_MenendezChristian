@@ -54,4 +54,10 @@ export default class UserRepository
     {
         return this.dao.deleteUserByEmail(email);
     }
+
+    updateUserRole = (userId, newRole)=> 
+    {
+        return this.dao.updateUserRole(userId, newRole);
+    }
+    
 }

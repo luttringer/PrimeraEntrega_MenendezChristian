@@ -171,7 +171,58 @@ const allUsers = async (req, res) =>
         res.status(500).send('Error interno del servidor');
     }
 };
-  
+
+const renderGestUsers = async (req, res) => 
+{
+    try 
+    {
+        const baseUrl = req.protocol + '://' + req.get('host');
+        const allUsersInfo = await userService.getAllUsersInfo();
+        res.render('gestUsers', { allUsersInfo, baseUrl });
+    } 
+    catch (error) 
+    {
+        res.status(500).send('Error interno del servidor');
+    }
+};
+
+
+const deleteUser = async (req, res) => 
+{
+    try 
+    {
+        const userEmail = req.params.email;
+        await userService.deleteUserByEmail(userEmail);
+        res.status(200).send('Usuario borrado satisfactoriamente');
+    } 
+    catch (error) 
+    {
+        res.status(500).send('Error interno del servidor');
+    }
+};
+
+const changeRole = async (req, res) => 
+{
+    try {
+        const userId = req.params.uid;
+        const newRole = req.body.newRole;
+        const user = await userService.getUserById(userId);
+
+        if (!user) return res.status(404).send('Usuario no encontrado');
+        const allowedRoles = ['user', 'admin', 'superadmin', 'premium'];
+        if (!allowedRoles.includes(newRole)) return res.status(400).send('Rol no permitido');
+        const updatedUser = await userService.updateUserRole(userId, newRole);
+
+        res.status(200).send('Rol de usuario actualizado correctamente');
+    } catch (error) {
+        //console.error('Error al cambiar el rol del usuario:', error.message);
+        res.status(500).send('Error interno del servidor');
+    }
+};
+
+
+
+
 
 export default 
 {
@@ -180,5 +231,8 @@ export default
     changeUserRole,
     renderFormDocuments,
     updateDocumentsRegister,
-    allUsers
+    allUsers,
+    renderGestUsers, 
+    deleteUser, 
+    changeRole
 }

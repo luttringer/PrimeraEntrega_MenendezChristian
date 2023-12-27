@@ -153,4 +153,14 @@ export default class UserManager
         }
     };
 
+    updateUserRole = async (userId, newRole) => 
+    {
+        try {
+            const updatedUser = await userModel.findByIdAndUpdate(userId, { role: newRole }, { new: true });
+            return updatedUser;
+        } catch (error) {
+            throw error;
+        }
+    }
+
 }

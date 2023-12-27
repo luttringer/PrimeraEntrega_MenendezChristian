@@ -94,6 +94,15 @@ if(cluster.isPrimary)
                     total += product.f_price * product.f_quantity;
                 }
                 return total;
+            }, 
+            eq: function (a, b) 
+            {
+                return a === b;
+            },
+            or: function () 
+            {
+                const args = Array.prototype.slice.call(arguments, 0, -1);
+                return args.some(Boolean);
             }
         }
     });
